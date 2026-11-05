@@ -250,7 +250,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 /* ===== CTA ===== */
 .cta-wrap { padding: clamp(80px, 10vw, 140px) 0 0; }
 .cta { position: relative; background: var(--dark); color: #fff; min-height: 460px; display: flex; align-items: center; overflow: hidden; }
-.cta__img { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; background: url(../img/w10.webp) center / cover; }
+.cta__img { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; background: url(../img/s4.webp) center / cover; }
 .cta__img::after { content: ""; position: absolute; inset: 0 0 0 -2px; background: linear-gradient(90deg, var(--dark) 0%, rgba(14,15,17,.6) 35%, rgba(14,15,17,.1) 100%); }
 .cta__text { position: relative; padding: clamp(36px, 5vw, 72px); max-width: 760px; }
 .cta .h2 { font-size: clamp(28px, 3vw, 44px); }
