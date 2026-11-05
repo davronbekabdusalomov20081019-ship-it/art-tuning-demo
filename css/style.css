@@ -458,7 +458,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .mcalc__box { position: relative; flex: none; width: 16px; height: 16px; border: 1.5px solid #6b7179; transition: background .2s, border-color .2s; }
 .mcalc__opts button[aria-pressed="true"] .mcalc__box { background: var(--red); border-color: var(--red); }
 .mcalc__opts button[aria-pressed="true"] .mcalc__box::after { content: ""; position: absolute; left: 4px; top: 0; width: 4px; height: 9px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
-.mcalc__name small { margin-left: 6px; font-size: 11px; color: #8a9099; }
+.mcalc__name small { margin-left: 6px; font-size: 12px; color: #8a9099; }
 .mcalc__price { margin-left: auto; font: 600 13px/1 var(--display); white-space: nowrap; color: #fff; }
 .mcalc__price::after { content: " ₽"; }
 .mcalc__opts button:focus-visible, .seg button:focus-visible { outline: 2px solid var(--red-2); outline-offset: 1px; }
@@ -470,7 +470,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .mcalc__btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .mcalc__btns .btn { width: 100%; padding: 0 10px; }
 .mcalc__btns .btn.is-off { opacity: .35; pointer-events: none; }
-.mcalc__note { margin: 12px 0 0; font-size: 11px; line-height: 1.45; color: #8a9099; }
+.mcalc__note { margin: 12px 0 0; font-size: 12px; line-height: 1.45; color: #8a9099; }
 @media (max-width: 1100px) {
   .prices__grid { grid-template-columns: 1fr; }
   .mcalc { position: static; max-width: 560px; }
