@@ -408,4 +408,4 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 
 /* ===== Demo badge (remove before launch) ===== */
 .demo-badge { position: fixed; left: 16px; bottom: 16px; z-index: 70; background: var(--red); color: #fff; padding: 8px 12px; font: 600 11px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; pointer-events: none; }
-@media (max-width: 960px) { .demo-badge { bottom: auto; top: 76px; left: 12px; } }
+@media (max-width: 960px) { .demo-badge { bottom: calc(80px + env(safe-area-inset-bottom)); left: 12px; } }
