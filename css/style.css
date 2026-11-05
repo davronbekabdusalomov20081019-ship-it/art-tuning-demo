@@ -279,15 +279,18 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .rev .rating__stars { display: block; font-size: 12px; margin-bottom: 14px; }
 
 /* ===== CTA ===== */
-.cta-wrap { padding: clamp(80px, 10vw, 140px) 0 0; }
-.cta { position: relative; background: var(--dark); color: #fff; min-height: 460px; display: flex; align-items: center; overflow: hidden; }
-.cta__img { position: absolute; top: 0; right: 0; bottom: 0; width: 58%; background: url(../img/s4.webp) center / cover; }
-.cta__img::after { content: ""; position: absolute; inset: 0 0 0 -2px; background: linear-gradient(90deg, var(--dark) 0%, rgba(14,15,17,.6) 35%, rgba(14,15,17,.1) 100%); }
-.cta__text { position: relative; padding: clamp(36px, 5vw, 72px); max-width: 760px; }
-.cta .h2 { font-size: clamp(28px, 3vw, 44px); }
-.cta__text > p { color: #b9bdc3; margin: 22px 0 32px; }
+.cta { position: relative; margin-top: clamp(80px, 10vw, 140px); background: var(--dark); color: #fff; min-height: clamp(520px, 78vh, 760px); display: flex; align-items: center; overflow: hidden; }
+.cta__img { position: absolute; inset: 0; background: url(../img/s5.webp) 70% 50% / cover; transform: scale(1.04); transition: transform 1.6s var(--ease); }
+.cta:hover .cta__img { transform: scale(1); }
+.cta__img::after { content: ""; position: absolute; inset: 0; background:
+  linear-gradient(90deg, rgba(10,11,12,.92) 0%, rgba(10,11,12,.72) 36%, rgba(10,11,12,.15) 75%),
+  linear-gradient(0deg, rgba(10,11,12,.5) 0%, rgba(10,11,12,0) 30%); }
+.cta .container { position: relative; }
+.cta__text { max-width: 640px; padding: clamp(64px, 8vw, 110px) 0; }
+.cta .h2 { font-size: clamp(30px, 3.4vw, 52px); }
+.cta__text > p { color: #c3c7cc; margin: 24px 0 34px; font-size: 17px; max-width: 520px; }
 .cta__btns { display: flex; flex-wrap: wrap; gap: 12px; }
-.cta__small { margin-top: 22px; font-size: 14px; color: #8a9099; }
+.cta__small { margin-top: 22px; font-size: 14px; color: #9aa0a8; }
 .cta__small a { color: #fff; border-bottom: 1px solid rgba(255,255,255,.4); }
 
 /* ===== Contacts ===== */
@@ -398,7 +401,8 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   .step.is-in::after { transform: scaleY(1); }
   .gallery { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 180px; }
   .rev { flex-basis: 100%; padding: 8px 4px 8px 24px; }
-  .cta__img { width: 100%; opacity: .45; }
+  .cta__img { background-position: 62% 50%; }
+  .cta__img::after { background: linear-gradient(0deg, rgba(10,11,12,.92) 0%, rgba(10,11,12,.75) 60%, rgba(10,11,12,.55) 100%); }
   .footer__in { grid-template-columns: 1fr 1fr; }
   .footer__contact { align-items: flex-start; text-align: left; }
   .mbar { display: grid; grid-template-columns: 1fr 1.4fr; gap: 8px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(241,242,244,.95); backdrop-filter: blur(12px); border-top: 1px solid var(--line); transform: translateY(110%); transition: transform .4s var(--ease); }
