@@ -11,25 +11,26 @@ const PRICES = [
     ['Перетяжка сидений салона', 'Легковые и грузовые авто любой сложности', 'от 96 000 ₽'],
     ['Перетяжка обшивки дверей', 'Верх, вставка, подлокотник, карман — с двух сторон, экокожа', 'от 24 000 ₽'],
     ['Перетяжка торпедо', 'Верх в экокожу — 80 000 ₽, низ — от 70 000 ₽', 'от 70 000 ₽'],
-    ['Потолок в алькантару (джип)', 'Потолок и стойки, оригинал или аналоги, покраска потолочного пластика', 'от 80 000 ₽'],
+    ['Потолок в алькантару (джип)', 'Потолок без люка, 6 стоек, 2 козырька, покраска пластика. С оригинальной Alcantara — 110 000 ₽', 'от 80 000 ₽'],
     ['Перетяжка салона с дизайном', 'Уникальный интерьер по вашему эскизу', 'от 75 000 ₽'],
     ['Отдельные элементы интерьера', 'Подлокотник, стойки, карты дверей — по элементам', 'от 2 500 ₽'],
   ]},
   { id: 'wheel', label: 'Руль и КПП', items: [
     ['Руль «Премиум»', 'Натуральная кожа (Австрия), около 12 часов. Нитка и шов — на выбор', '15 000 ₽'],
+    ['Руль «Комфорт»', 'Экокожа, руль с подогревом, 5–10 часов', '7 000 ₽'],
     ['Руль «Эконом»', 'Экокожа, без подогрева, около 4 часов', '5 000 ₽'],
     ['Покраска руля', 'Если кожа без порывов — возвращаем цвет и вид', '4 500 ₽'],
     ['Перетяжка ручки КПП', 'Занимает 1–1,5 часа', '2 500 ₽'],
   ]},
   { id: 'seats', label: 'Ремонт сидений', items: [
     ['Авточехлы на заказ', 'Индивидуальный пошив под вашу модель', 'от 18 000 ₽'],
-    ['Установка подогрева сидений', 'Монтаж и подключение', 'от 10 000 ₽'],
+    ['Установка подогрева сидений', 'Комплект на кресло: 2 мата, провода и кнопка, около 5 часов', 'от 10 000 ₽'],
     ['Покраска кожи сидений', 'Одно кресло, лицевая часть — 14 000 ₽', 'от 9 000 ₽'],
     ['Ремонт автокресла', 'Замена одного элемента: кожа — 5 000 ₽, ткань — 4 500 ₽', 'от 4 500 ₽'],
     ['Поролон боковой поддержки', 'Ремонт поролона 2 500 ₽ + разборка кресла 1 500 ₽', 'от 4 000 ₽'],
   ]},
   { id: 'comfort', label: 'SRS и шумоизоляция', items: [
-    ['Шумоизоляция автомобиля', 'Пол, багажник, арки, потолок, двери. Седан — 80 000 ₽, паркетник — 95 000 ₽, джип — 120 000 ₽', 'от 80 000 ₽'],
+    ['Шумоизоляция автомобиля', 'Пол, багажник, арки, потолок, двери. Седан — 80 000 ₽, паркетник — 95 000 ₽, джип — 120 000 ₽. Гарантия 5 лет', 'от 80 000 ₽'],
     ['Восстановление SRS после ДТП', 'Подушки безопасности, перетяжка торпедо, замена крышки руля', 'от 5 000 ₽'],
     ['Скрытая установка видеорегистратора', 'Спрячем провода и подключим', '1 500 ₽'],
   ]},
@@ -227,65 +228,56 @@ showTab('salon');
 // Service cards open the matching price tab
 $$('.card[data-tab]').forEach(c => c.addEventListener('click', () => showTab(c.dataset.tab)));
 
-// ===== Price calculator =====
-// Base prices are the "from" prices of the price list (sedan, eco-leather).
-// k = car-class factor for upholstery jobs; byClass = exact prices per class.
-// NOTE: crossover/SUV factors and ceiling/dry-cleaning crossover prices are estimates — confirm with the atelier.
-const CAR_ICON = {
-  sedan: '<path d="M6 40h8m60 0h14M22 40h44M8 40c-3 0-4-2-4-5v-4c0-2 1-3 3-4l14-3 12-9c2-1 4-2 6-2h22c3 0 5 1 7 3l9 8 10 2c3 1 5 3 5 6v3c0 3-2 5-5 5"/><circle cx="18" cy="40" r="6"/><circle cx="70" cy="40" r="6"/><path d="M34 15l-8 9h24V14M54 14v10h20l-8-8"/>',
-  cross: '<path d="M6 42h8m58 0h14M24 42h40M8 42c-3 0-4-2-4-5v-7c0-2 1-3 3-4l12-3 9-11c2-2 4-3 7-3h28c3 0 5 1 7 3l8 11 7 2c3 1 5 3 5 6v6c0 3-2 5-5 5"/><circle cx="19" cy="42" r="7"/><circle cx="69" cy="42" r="7"/><path d="M32 13l-7 10h25V12M54 12v11h21l-7-10"/>',
-  suv: '<path d="M6 43h8m58 0h14M25 43h39M8 43c-3 0-4-2-4-5V24c0-2 1-4 3-4h10l6-11c1-2 3-3 5-3h40c3 0 4 1 5 3l5 11h5c2 0 4 2 4 4v14c0 3-2 5-5 5"/><circle cx="19" cy="43" r="7"/><circle cx="69" cy="43" r="7"/><path d="M27 10l-5 10h28V10M54 10v10h24l-5-10"/>',
-};
+// ===== Price calculator (compact, inside the prices block) =====
+// Every number comes from the atelier's price list on Yandex Maps.
+// Car class changes a price only where the price list itself gives per-class prices.
 const CALC = {
   classes: [
-    { id: 'sedan', code: 's', name: 'Седан, хэтчбек', hint: 'Solaris, Camry, Octavia', k: 1 },
-    { id: 'cross', code: 'c', name: 'Кроссовер', hint: 'RAV4, Tiguan, Haval', k: 1.15 },
-    { id: 'suv', code: 'j', name: 'Джип, минивэн', hint: 'Prado, LX, G-класс', k: 1.3 },
+    { id: 'sedan', code: 's', name: 'Седан' },
+    { id: 'cross', code: 'c', name: 'Кроссовер' },
+    { id: 'suv', code: 'j', name: 'Джип' },
   ],
   materials: [
-    { id: 'eco', code: 'e', name: 'Экокожа', hint: 'Практичная, большой выбор цветов', m: 1 },
-    { id: 'leather', code: 'l', name: 'Натуральная кожа', hint: 'Из Австрии, примерно +45%', m: 1.45 },
+    { id: 'eco', code: 'e', name: 'Экокожа', m: 1 },
+    { id: 'leather', code: 'l', name: 'Нат. кожа', m: 1.45 }, // price list: natural leather +45%
   ],
   items: [
-    { id: 'seats', code: 'a', name: 'Сиденья', hint: 'Весь салон', base: 96000, byCar: true, byMat: true },
-    { id: 'doors', code: 'b', name: 'Обшивка дверей', hint: 'Вставки, подлокотники, карманы', base: 24000, byMat: true },
-    { id: 'dash', code: 'c', name: 'Торпедо', hint: 'Верхняя часть', base: 80000, byMat: true },
-    { id: 'ceiling', code: 'd', name: 'Потолок в алькантару', hint: 'Со стойками', byClass: { sedan: 60000, cross: 70000, suv: 80000 } },
-    { id: 'wheel', code: 'e', name: 'Руль', hint: 'Эконом за 4 ч / премиум за день', byMatPrice: { eco: 5000, leather: 15000 } },
-    { id: 'shifter', code: 'f', name: 'Ручка КПП', hint: '1–1,5 часа', base: 2500 },
-    { id: 'heat', code: 'g', name: 'Подогрев сидений', hint: 'Монтаж и подключение', base: 10000 },
-    { id: 'noise', code: 'h', name: 'Шумоизоляция', hint: 'Пол, арки, двери, потолок', byClass: { sedan: 80000, cross: 95000, suv: 120000 } },
-    { id: 'clean', code: 'i', name: 'Химчистка салона', hint: 'Со снятием сидений', byClass: { sedan: 12000, cross: 13500, suv: 15000 } },
-    { id: 'srs', code: 'j', name: 'Восстановление SRS', hint: 'После ДТП', base: 5000 },
+    { id: 'seats', code: 'a', name: 'Сиденья, весь салон', base: 96000, byMat: true },
+    { id: 'doors', code: 'b', name: 'Обшивка дверей', base: 24000, byMat: true },
+    { id: 'dash', code: 'c', name: 'Торпедо, верх', base: 80000, byMat: true },
+    { id: 'ceiling', code: 'd', name: 'Потолок в алькантару', base: 80000, hint: 'цена для джипа' },
+    { id: 'wheel', code: 'e', name: 'Руль', byMatPrice: { eco: 5000, leather: 15000 } },
+    { id: 'shifter', code: 'f', name: 'Ручка КПП', base: 2500 },
+    { id: 'seatfix', code: 'k', name: 'Ремонт элемента кресла', base: 5000 },
+    { id: 'foam', code: 'l', name: 'Поролон боковины', base: 4000 },
+    { id: 'heat', code: 'g', name: 'Подогрев сиденья', base: 10000, hint: 'за кресло' },
+    { id: 'noise', code: 'h', name: 'Шумоизоляция', byClass: { sedan: 80000, cross: 95000, suv: 120000 } },
+    { id: 'clean', code: 'i', name: 'Химчистка салона', byClass: { sedan: 12000, cross: 12000, suv: 15000 } },
+    { id: 'srs', code: 'j', name: 'Восстановление SRS', base: 5000 },
   ],
 };
-const calc = { car: 'sedan', mat: 'eco', items: new Set(['seats', 'wheel']) };
+const calc = { car: 'sedan', mat: 'eco', items: new Set(['wheel']) };
 const fmt = n => n.toLocaleString('ru-RU');
 
 function itemPrice(it) {
-  const car = CALC.classes.find(c => c.id === calc.car);
   const mat = CALC.materials.find(m => m.id === calc.mat);
   let p;
   if (it.byClass) p = it.byClass[calc.car];
   else if (it.byMatPrice) p = it.byMatPrice[calc.mat];
-  else p = it.base * (it.byCar ? car.k : 1) * (it.byMat ? mat.m : 1);
+  else p = it.base * (it.byMat ? mat.m : 1);
   return Math.round(p / 500) * 500; // round to 500 ₽
 }
 
-const SVG_CHECK = '<svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2"/></svg>';
-function renderCalcControls() {
+function renderCalc() {
   $('#calcCars').innerHTML = CALC.classes.map(c =>
-    `<button type="button" class="tile car" role="radio" aria-checked="${c.id === calc.car}" data-car="${c.id}">
-      <svg viewBox="0 0 90 52" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true">${CAR_ICON[c.id]}</svg>
-      <span><b>${c.name}</b><small>${c.hint}</small></span></button>`).join('');
-  $('#calcOpts').innerHTML = CALC.items.map(it =>
-    `<button type="button" class="tile opt" aria-pressed="${calc.items.has(it.id)}" data-item="${it.id}">
-      <span class="opt__box">${SVG_CHECK}</span>
-      <span class="opt__txt"><b>${it.name}</b><small>${it.hint}</small></span>
-      <span class="opt__price">от ${fmt(itemPrice(it))} ₽</span></button>`).join('');
+    `<button type="button" role="radio" aria-checked="${c.id === calc.car}" data-car="${c.id}">${c.name}</button>`).join('');
   $('#calcMats').innerHTML = CALC.materials.map(m =>
-    `<button type="button" class="tile mat" role="radio" aria-checked="${m.id === calc.mat}" data-mat="${m.id}">
-      <span class="mat__sw mat__sw--${m.id}"></span><span><b>${m.name}</b><small>${m.hint}</small></span></button>`).join('');
+    `<button type="button" role="radio" aria-checked="${m.id === calc.mat}" data-mat="${m.id}">${m.name}</button>`).join('');
+  $('#calcOpts').innerHTML = CALC.items.map(it =>
+    `<li><button type="button" aria-pressed="${calc.items.has(it.id)}" data-item="${it.id}">
+      <span class="mcalc__box"></span>
+      <span class="mcalc__name">${it.name}${it.hint ? `<small>${it.hint}</small>` : ''}</span>
+      <span class="mcalc__price">${fmt(itemPrice(it))}</span></button></li>`).join('');
 }
 
 let shownTotal = 0;
@@ -295,14 +287,14 @@ function animateTotal(to) {
   shownTotal = to;
   const t0 = performance.now();
   const tick = t => {
-    const p = Math.min(1, (t - t0) / 600);
+    const p = Math.min(1, (t - t0) / 500);
     el.textContent = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3))));
     if (p < 1) requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
   // Fallback: rAF is paused in background tabs, so always land on the exact value
-  setTimeout(() => { if (shownTotal === to) el.textContent = fmt(to); }, 700);
-  const box = $('.sum__total');
+  setTimeout(() => { if (shownTotal === to) el.textContent = fmt(to); }, 650);
+  const box = $('.mcalc__total');
   box.classList.remove('bump'); void box.offsetWidth; box.classList.add('bump');
 }
 
@@ -310,36 +302,27 @@ function renderSummary() {
   const car = CALC.classes.find(c => c.id === calc.car);
   const mat = CALC.materials.find(m => m.id === calc.mat);
   const chosen = CALC.items.filter(it => calc.items.has(it.id));
-  const total = chosen.reduce((s, it) => s + itemPrice(it), 0);
-  $('#sumMeta').textContent = `${car.name} · ${mat.name.toLowerCase()}`;
-  $('#sumList').innerHTML = chosen.length
-    ? chosen.map(it => `<li><span>${it.name}</span><span>${fmt(itemPrice(it))} ₽</span></li>`).join('')
-    : '<li class="sum__empty">Отметьте хотя бы одну услугу</li>';
-  animateTotal(total);
-  $('#chipTotal').textContent = fmt(total);
+  animateTotal(chosen.reduce((sum, it) => sum + itemPrice(it), 0));
   // Payload for the bot's /start: only service codes, no personal data (fits Telegram's 64-char limit)
   const payload = `calc-${car.code}${mat.code}-${chosen.map(it => it.code).join('')}`;
   $('#sumMax').href = `${BOTS.max}?start=${payload}`;
   $('#sumTg').href = `${BOTS.telegram}?start=${payload}`;
-  $$('.sum__btns .btn').forEach(b => b.classList.toggle('is-off', !chosen.length));
+  $$('.mcalc__btns .btn').forEach(b => b.classList.toggle('is-off', !chosen.length));
 }
 
-$('#calcCars').addEventListener('click', e => {
-  const b = e.target.closest('[data-car]'); if (!b) return;
-  calc.car = b.dataset.car; renderCalcControls(); renderSummary();
+$('#calc').addEventListener('click', e => {
+  const car = e.target.closest('[data-car]');
+  const mat = e.target.closest('[data-mat]');
+  const item = e.target.closest('[data-item]');
+  if (car) calc.car = car.dataset.car;
+  if (mat) calc.mat = mat.dataset.mat;
+  if (item) {
+    const id = item.dataset.item;
+    calc.items.has(id) ? calc.items.delete(id) : calc.items.add(id);
+  }
+  if (car || mat || item) { renderCalc(); renderSummary(); }
 });
-$('#calcMats').addEventListener('click', e => {
-  const b = e.target.closest('[data-mat]'); if (!b) return;
-  calc.mat = b.dataset.mat; renderCalcControls(); renderSummary();
-});
-$('#calcOpts').addEventListener('click', e => {
-  const b = e.target.closest('[data-item]'); if (!b) return;
-  const id = b.dataset.item;
-  calc.items.has(id) ? calc.items.delete(id) : calc.items.add(id);
-  b.setAttribute('aria-pressed', calc.items.has(id));
-  renderSummary();
-});
-renderCalcControls();
+renderCalc();
 renderSummary();
 
 // ===== Works gallery + filter + lightbox =====

@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.png">
   <link rel="preload" href="img/hero.webp" as="image">
-  <link rel="stylesheet" href="css/style.css?v=15">
+  <link rel="stylesheet" href="css/style.css?v=16">
 </head>
 <body>
 
@@ -24,7 +24,6 @@
       <a href="#services">Услуги</a>
       <a href="#reviews">Отзывы</a>
       <a href="#prices">Цены</a>
-      <a href="#calc">Расчёт</a>
       <a href="#works">Работы</a>
       <a href="#book">Контакты</a>
     </nav>
@@ -275,63 +274,36 @@
   </div>
 </section>
 
-<!-- ============ PRICES ============ -->
+<!-- ============ PRICES + CALCULATOR ============ -->
 <section class="prices" id="prices">
-  <div class="container prices__in">
-    <div class="prices__side">
-      <p class="eyebrow reveal">Цены <i></i></p>
-      <h2 class="h2 reveal">Прайс<br><span class="accent">без сюрпризов</span></h2>
-      <p class="prices__note reveal">Цена зависит от модели авто и материала — точную сумму назовём после осмотра. Натуральная кожа дороже экокожи примерно на 45%.</p>
-      <div class="tabs reveal" role="tablist" id="tabs"></div>
-      <a href="#calc" class="link-arrow prices__calc reveal">Посчитать свой салон <svg class="ico"><use href="#i-arrow"/></svg></a>
-    </div>
-    <div class="prices__list" id="priceList" aria-live="polite"></div>
-  </div>
-</section>
-
-<!-- ============ CALCULATOR ============ -->
-<section class="calc" id="calc">
   <div class="container">
     <div class="sec-head">
       <div>
-        <p class="eyebrow reveal">Калькулятор <i></i></p>
-        <h2 class="h2 reveal">Соберите свой салон —<br><span class="accent">узнайте цену</span></h2>
+        <p class="eyebrow reveal">Цены и расчёт <i></i></p>
+        <h2 class="h2 reveal">Прайс<br><span class="accent">без сюрпризов</span></h2>
       </div>
-      <p class="calc__lead reveal">Отметьте, что хотите обновить. Это ориентир: точную сумму мастер назовёт после осмотра.</p>
+      <p class="prices__note reveal">Цены — из нашего прайса, «от» и для экокожи. Точную сумму назовём после осмотра: она зависит от модели авто и материала.</p>
     </div>
-
-    <div class="calc__in">
-      <div class="calc__form">
-        <fieldset class="calc__step reveal">
-          <legend><em>01</em> Класс автомобиля</legend>
-          <div class="cars" id="calcCars"></div>
-        </fieldset>
-
-        <fieldset class="calc__step reveal">
-          <legend><em>02</em> Что делаем</legend>
-          <div class="opts" id="calcOpts"></div>
-        </fieldset>
-
-        <fieldset class="calc__step reveal">
-          <legend><em>03</em> Материал</legend>
-          <div class="mats" id="calcMats"></div>
-        </fieldset>
-        <a href="#calcSum" class="calc__chip"><span>Итого</span><b>от <span id="chipTotal">0</span> ₽</b><svg class="ico"><use href="#i-arrow"/></svg></a>
+    <div class="prices__grid">
+      <div class="prices__main">
+        <div class="tabs reveal" role="tablist" id="tabs"></div>
+        <div class="prices__list" id="priceList" aria-live="polite"></div>
       </div>
 
-      <aside class="sum dark reveal" id="calcSum" aria-live="polite">
-        <p class="sum__label">Ваш расчёт</p>
-        <p class="sum__meta" id="sumMeta"></p>
-        <ul class="sum__list" id="sumList"></ul>
-        <div class="sum__total">
+      <aside class="mcalc dark reveal" id="calc" aria-label="Калькулятор стоимости">
+        <p class="mcalc__label">Быстрый расчёт</p>
+        <div class="seg" id="calcCars" role="radiogroup" aria-label="Класс автомобиля"></div>
+        <div class="seg" id="calcMats" role="radiogroup" aria-label="Материал"></div>
+        <ul class="mcalc__opts" id="calcOpts"></ul>
+        <div class="mcalc__total" aria-live="polite">
           <span>Итого, ориентир</span>
-          <b><small>от</small> <span id="sumTotal">0</span> ₽</b>
+          <b>от <span id="sumTotal">0</span> ₽</b>
         </div>
-        <div class="sum__btns">
-          <a class="btn btn--max" id="sumMax" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-max"/></svg>Отправить в MAX</a>
-          <a class="btn btn--tg" id="sumTg" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-tg"/></svg>Отправить в Telegram</a>
+        <div class="mcalc__btns">
+          <a class="btn btn--max btn--sm" id="sumMax" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-max"/></svg>MAX</a>
+          <a class="btn btn--tg btn--sm" id="sumTg" href="#" target="_blank" rel="noopener"><svg class="ico"><use href="#i-tg"/></svg>Telegram</a>
         </div>
-        <p class="sum__note">Бот получит только выбранные услуги — без имени и телефона. Мастер уточнит детали и назовёт точную цену.</p>
+        <p class="mcalc__note">Отправьте расчёт — бот передаст мастеру только выбранные услуги, без имени и телефона.</p>
       </aside>
     </div>
   </div>
@@ -454,6 +426,6 @@
   </defs>
 </svg>
 
-<script src="js/main.js?v=11"></script>
+<script src="js/main.js?v=12"></script>
 </body>
 </html>
