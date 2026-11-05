@@ -577,3 +577,19 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   .ba__list li { grid-template-columns: 1fr; gap: 2px; }
   .ba .btn { width: 100%; }
 }
+
+/* Before/after: per-pair caption, switcher thumbs, smooth swap */
+.ba__pair { margin: 0 0 32px; }
+.ba__num { display: block; font: 600 12px/1 var(--display); letter-spacing: .14em; color: var(--red); margin-bottom: 10px; }
+.ba__title { display: block; font: 500 clamp(20px, 2vw, 26px)/1.15 var(--display); text-transform: uppercase; margin-bottom: 16px; }
+.ba__pair.swap .ba__title, .ba__pair.swap .ba__list { animation: cap-in .7s var(--ease); }
+.ba__pair .ba__list { margin: 0; }
+.compare img { transition: opacity .35s ease; }
+.compare.is-switching img { opacity: 0; }
+.ba__nav { display: flex; align-items: center; gap: 12px; margin-top: 16px; }
+.ba__nav[hidden] { display: none; }
+.ba__nav .round:hover { background: var(--ink); color: #fff; }
+.ba__thumbs { display: flex; gap: 8px; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; padding: 3px; }
+.ba__thumbs button { flex: none; width: 64px; height: 64px; background: #dfe1e5 center / cover; opacity: .55; transition: opacity .25s, box-shadow .25s; }
+.ba__thumbs button:hover { opacity: .9; }
+.ba__thumbs button[aria-selected="true"] { opacity: 1; box-shadow: 0 0 0 2px var(--red); }

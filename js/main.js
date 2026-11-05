@@ -86,6 +86,25 @@ const REVIEWS = [
   ['Арина', 'август 2024', 'Порвалось кресло и выглядело так, будто вот-вот оторвётся. Порадовали бесплатная консультация и осмотр. Всё поменяли, провели сварочные работы.'],
 ];
 
+// ===== Before / after pairs =====
+// To add a pair: put two photos of the SAME size and angle into img/
+// (e.g. ba2-before.webp and ba2-after.webp) and copy one block below.
+// ai: true shows the "illustration made by AI" note under the slider — remove it for real photos.
+const BEFORE_AFTER = [
+  {
+    before: 'ba1-before.webp',
+    after: 'ba1-after.webp',
+    title: 'Спортивное кресло',
+    details: [
+      ['Было', 'Серая кожа: потёртости, заломы, выцветший цвет'],
+      ['Материал', 'Чёрная кожа + жёлтые боковины'],
+      ['Строчка', 'Ромб с контрастной нитью'],
+      ['Детали', 'Вышивка на подголовнике, новый наполнитель'],
+    ],
+    ai: true,
+  },
+];
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 document.documentElement.classList.add('js');
@@ -448,8 +467,49 @@ $$('.reveal, .reveal-img').forEach(el => {
   const box = $('#compare');
   if (!box) return;
   const range = $('.compare__range', box);
+  const imgBefore = $('.compare__before', box);
+  const imgAfter = $('.compare__after', box);
+  const thumbs = $('#baThumbs');
   let touched = false;
+  let cur = 0;
   const setPos = v => { box.style.setProperty('--pos', v + '%'); range.value = v; };
+
+  function showPair(n) {
+    cur = (n + BEFORE_AFTER.length) % BEFORE_AFTER.length;
+    const p = BEFORE_AFTER[cur];
+    box.classList.add('is-switching');
+    // Swap photos once the new "after" image is loaded, so the frame never flashes empty
+    const pre = new Image();
+    pre.onload = pre.onerror = () => {
+      imgAfter.src = 'img/' + p.after;
+      imgBefore.src = 'img/' + p.before;
+      imgAfter.alt = 'После: ' + p.title.toLowerCase();
+      imgBefore.alt = 'До: ' + p.title.toLowerCase();
+      box.style.aspectRatio = pre.naturalWidth ? `${pre.naturalWidth} / ${pre.naturalHeight}` : '';
+      setPos(50);
+      requestAnimationFrame(() => box.classList.remove('is-switching'));
+    };
+    pre.src = 'img/' + p.after;
+    $('#baNum').textContent = `${String(cur + 1).padStart(2, '0')} / ${String(BEFORE_AFTER.length).padStart(2, '0')}`;
+    $('#baTitle').textContent = p.title;
+    $('#baList').innerHTML = p.details.map(([k, v]) => `<li><b>${k}</b><span>${v}</span></li>`).join('');
+    $('#baNote').hidden = !p.ai;
+    $$('button', thumbs).forEach((t, i) => t.setAttribute('aria-selected', i === cur));
+    const pair = $('.ba__pair');
+    pair.classList.remove('swap'); void pair.offsetWidth; pair.classList.add('swap');
+  }
+
+  // Thumbnails + arrows appear only when there is more than one pair
+  if (BEFORE_AFTER.length > 1) {
+    $('#baNav').hidden = false;
+    thumbs.innerHTML = BEFORE_AFTER.map((p, i) =>
+      `<button role="tab" aria-label="${p.title}" style="background-image:url(img/${p.after})" data-i="${i}"></button>`).join('');
+    thumbs.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showPair(+b.dataset.i); });
+    $('#baPrev').addEventListener('click', () => showPair(cur - 1));
+    $('#baNext').addEventListener('click', () => showPair(cur + 1));
+  }
+  showPair(0);
+
   range.addEventListener('input', () => { touched = true; setPos(+range.value); });
   range.addEventListener('pointerdown', () => { touched = true; box.classList.add('is-drag'); });
   addEventListener('pointerup', () => box.classList.remove('is-drag'));
