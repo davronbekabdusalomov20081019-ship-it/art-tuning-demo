@@ -123,7 +123,7 @@ const sectionObserver = new IntersectionObserver(entries => {
     navLinks.forEach(a => a.classList.toggle('is-current', a.hash === '#' + e.target.id));
   });
 }, { rootMargin: '-45% 0px -50% 0px' });
-['about', 'services', 'prices', 'calc', 'works', 'reviews', 'contacts']
+['about', 'services', 'reviews', 'prices', 'calc', 'works', 'book']
   .forEach(id => sectionObserver.observe(document.getElementById(id)));
 
 // ===== Open / closed status (Krasnoyarsk time, UTC+7) =====
@@ -324,21 +324,46 @@ renderCalcControls();
 renderSummary();
 
 // ===== Works gallery + filter + lightbox =====
-const gallery = $('#gallery');
+const gallery = $('#galleryGrid');
+const moreBtn = $('#worksMore');
+const PREVIEW = 8; // photos visible before "show all"
+// Photos already shown in the featured slider go last, so the preview shows new ones
+const SLIDER_FILES = $$('.show__slide').map(s => s.style.backgroundImage.match(/(w\d+)\.webp/)[1]);
 let shown = [];
-function renderGallery(filter) {
+let filter = 'all';
+let expanded = false;
+
+const plural = n => {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return 'работа';
+  if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return 'работы';
+  return 'работ';
+};
+
+function renderGallery() {
   shown = WORKS.filter(w => filter === 'all' || w[1] === filter);
-  gallery.innerHTML = shown.map(([f, , capText, size], i) =>
-    `<figure class="shot ${size}" data-i="${i}" style="animation-delay:${Math.min(i, 12) * 40}ms">
+  if (filter === 'all') {
+    shown = [...shown.filter(w => !SLIDER_FILES.includes(w[0])), ...shown.filter(w => SLIDER_FILES.includes(w[0]))];
+  }
+  const visible = expanded ? shown : shown.slice(0, PREVIEW);
+  gallery.classList.toggle('is-preview', !expanded && shown.length > 4);
+  gallery.innerHTML = visible.map(([f, , capText, size], i) =>
+    `<figure class="shot ${size}" data-i="${i}" style="animation-delay:${Math.min(i % PREVIEW, 12) * 40}ms">
       <img src="img/${f}.webp" alt="${capText}" loading="lazy"><figcaption>${capText}</figcaption></figure>`).join('');
+  $('.works__count').innerHTML = `<b>${shown.length}</b> ${plural(shown.length)} — каждый шов вблизи`;
+  moreBtn.parentElement.hidden = expanded || shown.length <= PREVIEW;
+  moreBtn.textContent = `Показать все ${shown.length}`;
 }
 $('#chips').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
   $$('#chips button').forEach(x => x.classList.toggle('is-active', x === b));
-  renderGallery(b.dataset.f);
+  filter = b.dataset.f;
+  expanded = false;
+  renderGallery();
 });
-renderGallery('all');
+moreBtn.addEventListener('click', () => { expanded = true; renderGallery(); });
+renderGallery();
 
 const lb = $('#lb');
 let lbi = 0;

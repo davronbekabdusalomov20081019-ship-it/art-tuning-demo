@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.png">
   <link rel="preload" href="img/hero.webp" as="image">
-  <link rel="stylesheet" href="css/style.css?v=10">
+  <link rel="stylesheet" href="css/style.css?v=13">
 </head>
 <body>
 
@@ -26,7 +26,7 @@
       <a href="#prices">Цены</a>
       <a href="#calc">Расчёт</a>
       <a href="#works">Работы</a>
-      <a href="#contacts">Контакты</a>
+      <a href="#book">Контакты</a>
     </nav>
     <div class="header__contact">
       <a href="tel:+73912008158" class="header__phone">+7 (391) 200-81-58</a>
@@ -64,7 +64,7 @@
       <span class="rating__stars" aria-hidden="true">★★★★★</span>
       <span class="rating__txt">258 оценок · 219 отзывов<br>на Яндекс Картах</span>
     </a>
-    <a href="#showcase" class="hero__scroll" aria-label="Листать вниз"><span>Листайте</span><i></i></a>
+    <a href="#works" class="hero__scroll" aria-label="Листать вниз"><span>Листайте</span><i></i></a>
     <span class="hero__addr">ул. Шахтёров, 4, стр. 3<br>Красноярск</span>
   </div>
 </section>
@@ -80,11 +80,11 @@
   </div>
 </section>
 
-<!-- ============ SHOWCASE (real works slider) ============ -->
-<section class="showcase" id="showcase">
+<!-- ============ WORKS: featured slider + full gallery ============ -->
+<section class="showcase" id="works">
   <div class="container showcase__in">
     <div class="showcase__text">
-      <p class="eyebrow reveal">Свежие работы <i></i></p>
+      <p class="eyebrow reveal">Наши работы <i></i></p>
       <h2 class="h2 reveal">Из нашего<br><span class="accent">цеха</span></h2>
       <div class="show__cap reveal" aria-live="polite">
         <span class="show__num" data-cap-num>01</span>
@@ -96,7 +96,7 @@
         <button class="round" id="showNext" aria-label="Следующая работа"><svg class="ico"><use href="#i-arrow"/></svg></button>
         <div class="show__dots" role="tablist" aria-label="Работы"></div>
       </div>
-      <a href="#works" class="link-arrow reveal">Все работы <svg class="ico"><use href="#i-arrow"/></svg></a>
+      <a href="#gallery" class="link-arrow reveal">Все работы <svg class="ico"><use href="#i-arrow"/></svg></a>
     </div>
     <div class="show__stage reveal-img" aria-hidden="true">
       <div class="show__slide is-active" style="background-image:url(img/w01.webp)" data-title="Сиденья в чёрную кожу" data-sub="Ромб, двойная строчка, контрастный кант"></div>
@@ -105,6 +105,21 @@
       <div class="show__slide" style="background-image:url(img/w13.webp)" data-title="Задний ряд" data-sub="Бордо + беж, двухцветная перетяжка"></div>
       <div class="show__slide" style="background-image:url(img/w19.webp)" data-title="Спортивные кресла" data-sub="Ромб и жёлтый кант"></div>
     </div>
+  </div>
+
+  <div class="container works__all" id="gallery">
+    <div class="works__bar">
+      <p class="works__count reveal"><b id="worksCount">23</b> работы — каждый шов вблизи</p>
+      <div class="chips reveal" id="chips">
+        <button class="is-active" data-f="all">Все</button>
+        <button data-f="salon">Салон</button>
+        <button data-f="wheel">Руль</button>
+        <button data-f="seats">Сиденья</button>
+        <button data-f="other">Другое</button>
+      </div>
+    </div>
+    <div class="gallery" id="galleryGrid"></div>
+    <div class="works__more-wrap"><button class="btn btn--line" id="worksMore">Показать все работы</button></div>
   </div>
 </section>
 
@@ -143,12 +158,12 @@
     </div>
     <div class="cards">
       <a href="#prices" data-tab="salon" class="card reveal">
-        <div class="card__img"><img src="img/w15.webp" alt="Передние кресла после перетяжки: синяя кожа с бежевыми вставками" loading="lazy"></div>
+        <div class="card__img"><img src="img/w01.webp" alt="Сиденья, перетянутые в чёрную кожу с ромбом" loading="lazy"></div>
         <div class="card__body"><span class="card__num">01</span><h3>Перетяжка салона</h3><p>Сиденья, двери, стойки, подлокотники. Свой дизайн по эскизу.</p>
           <div class="card__foot"><b>от 24 000 ₽</b><svg class="ico"><use href="#i-arrow"/></svg></div></div>
       </a>
       <a href="#prices" data-tab="wheel" class="card reveal">
-        <div class="card__img"><img src="img/w10.webp" alt="Руль Toyota после перетяжки в кожу" loading="lazy"></div>
+        <div class="card__img"><img src="img/w47.webp" alt="Руль Infiniti после перетяжки" loading="lazy"></div>
         <div class="card__body"><span class="card__num">02</span><h3>Руль и КПП</h3><p>Экокожа за 4 часа или натуральная кожа. Нитка и шов — на выбор.</p>
           <div class="card__foot"><b>от 2 500 ₽</b><svg class="ico"><use href="#i-arrow"/></svg></div></div>
       </a>
@@ -158,12 +173,12 @@
           <div class="card__foot"><b>от 4 000 ₽</b><svg class="ico"><use href="#i-arrow"/></svg></div></div>
       </a>
       <a href="#prices" data-tab="salon" class="card reveal">
-        <div class="card__img"><img src="img/w21.webp" alt="Потолочная панель после перетяжки" loading="lazy"></div>
+        <div class="card__img"><img src="img/w18.webp" alt="Потолок, перетянутый в алькантару" loading="lazy"></div>
         <div class="card__body"><span class="card__num">04</span><h3>Потолок и торпедо</h3><p>Алькантара, оригинал или аналоги; покраска потолочного пластика.</p>
           <div class="card__foot"><b>от 70 000 ₽</b><svg class="ico"><use href="#i-arrow"/></svg></div></div>
       </a>
       <a href="#prices" data-tab="comfort" class="card reveal">
-        <div class="card__img"><img src="img/w33.webp" alt="Передняя панель после восстановления" loading="lazy"></div>
+        <div class="card__img"><img src="img/w46.webp" alt="Торпедо после восстановления" loading="lazy"></div>
         <div class="card__body"><span class="card__num">05</span><h3>SRS и шумоизоляция</h3><p>Подушки безопасности после ДТП, крышка руля, шумка пола и дверей.</p>
           <div class="card__foot"><b>от 5 000 ₽</b><svg class="ico"><use href="#i-arrow"/></svg></div></div>
       </a>
@@ -289,26 +304,6 @@
   </div>
 </section>
 
-<!-- ============ WORKS ============ -->
-<section class="works" id="works">
-  <div class="container">
-    <div class="sec-head">
-      <div>
-        <p class="eyebrow reveal">Примеры работ <i></i></p>
-        <h2 class="h2 reveal">Каждый шов —<br><span class="accent">вблизи</span></h2>
-      </div>
-      <div class="chips reveal" id="chips">
-        <button class="is-active" data-f="all">Все</button>
-        <button data-f="salon">Салон</button>
-        <button data-f="wheel">Руль</button>
-        <button data-f="seats">Сиденья</button>
-        <button data-f="other">Другое</button>
-      </div>
-    </div>
-    <div class="gallery" id="gallery"></div>
-  </div>
-</section>
-
 <!-- ============ CTA ============ -->
 <section class="cta" id="book">
   <div class="cta__img" aria-hidden="true"></div>
@@ -378,7 +373,7 @@
       <p>© 2012–2026 «Арт Тюнинг»<br>Цены на сайте не являются публичной офертой.</p>
     </div>
     <div class="footer__col"><b>Услуги</b><a href="#services">Перетяжка салона</a><a href="#services">Руль и КПП</a><a href="#services">Ремонт сидений</a><a href="#services">Восстановление SRS</a></div>
-    <div class="footer__col"><b>Ателье</b><a href="#about">О нас</a><a href="#works">Работы</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a></div>
+    <div class="footer__col"><b>Ателье</b><a href="#about">О нас</a><a href="#works">Работы</a><a href="#reviews">Отзывы</a><a href="#book">Контакты</a></div>
     <div class="footer__col footer__contact">
       <a href="tel:+73912008158" class="footer__phone">+7 (391) 200-81-58</a>
       <span>Пн–Пт 9–19, Сб 10–19</span>
@@ -426,6 +421,6 @@
   </defs>
 </svg>
 
-<script src="js/main.js?v=8"></script>
+<script src="js/main.js?v=9"></script>
 </body>
 </html>
