@@ -7,8 +7,8 @@
   <meta name="description" content="Автоателье «Арт Тюнинг», Красноярск, ул. Шахтёров, 4, стр. 3. Перетяжка салона, руля и сидений, потолок в алькантару, восстановление SRS. С 2012 года. Рейтинг 5,0 на Яндекс Картах.">
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.png">
-  <link rel="preload" href="img/s1.webp" as="image">
-  <link rel="stylesheet" href="css/style.css?v=6">
+  <link rel="preload" href="img/hero.webp" as="image">
+  <link rel="stylesheet" href="css/style.css?v=7">
 </head>
 <body>
 
@@ -41,11 +41,7 @@
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
-  <div class="hero__media" aria-hidden="true">
-    <div class="hero__slide is-active" style="background-image:url(img/s1.webp)" data-title="Руль и салон" data-sub="Светлая кожа с ровной прострочкой"></div>
-    <div class="hero__slide" style="background-image:url(img/s2.webp)" data-title="Тёмный салон" data-sub="Перфорация, строгая строчка"></div>
-    <div class="hero__slide" style="background-image:url(img/s3.webp)" data-title="Перетяжка руля" data-sub="От 4 часов, нитка — на выбор"></div>
-  </div>
+  <div class="hero__bg" aria-hidden="true"><img src="img/hero.webp" alt="" fetchpriority="high"></div>
 
   <div class="container hero__in">
     <p class="eyebrow reveal">Автоателье с 2012 года <i></i></p>
@@ -56,29 +52,20 @@
     </h1>
     <p class="hero__lead reveal">Кожа, экокожа и алькантара. Руль — от 4 часов, сиденья, потолок, торпедо, восстановление SRS после ДТП.</p>
     <div class="hero__actions reveal">
-      <a href="#book" class="btn btn--dark">Записаться через бота <svg class="ico"><use href="#i-arrow"/></svg></a>
-      <a href="#works" class="btn btn--line">Смотреть работы</a>
+      <a href="#book" class="btn btn--red">Записаться через бота <svg class="ico"><use href="#i-arrow"/></svg></a>
+      <a href="#calc" class="btn btn--glass">Рассчитать стоимость</a>
     </div>
-    <a class="rating reveal" href="https://yandex.ru/maps/org/art_tyuning/29921340829/reviews/" target="_blank" rel="noopener">
+  </div>
+
+  <div class="hero__bottom container">
+    <a class="rating rating--glass reveal" href="https://yandex.ru/maps/org/art_tyuning/29921340829/reviews/" target="_blank" rel="noopener">
       <span class="rating__val">5,0</span>
       <span class="rating__stars" aria-hidden="true">★★★★★</span>
       <span class="rating__txt">258 оценок · 219 отзывов<br>на Яндекс Картах</span>
     </a>
+    <a href="#showcase" class="hero__scroll" aria-label="Листать вниз"><span>Листайте</span><i></i></a>
+    <span class="hero__addr">ул. Шахтёров, 4, стр. 3<br>Красноярск</span>
   </div>
-
-  <div class="hero__bottom container">
-    <div class="hero__dots" role="tablist" aria-label="Слайды">
-      <button class="is-active" aria-label="Слайд 1">01</button><i></i>
-      <button aria-label="Слайд 2">02</button><i></i>
-      <button aria-label="Слайд 3">03</button>
-    </div>
-    <a href="#prices" class="hero__caption">
-      <b data-cap-title>Руль и салон</b>
-      <span data-cap-sub>Светлая кожа с ровной прострочкой</span>
-      <em>Смотреть цены <svg class="ico"><use href="#i-arrow"/></svg></em>
-    </a>
-  </div>
-  <span class="hero__vert">ул. Шахтёров, 4 · Красноярск</span>
 </section>
 
 <!-- ============ STATS ============ -->
@@ -89,6 +76,34 @@
     <div class="stat reveal"><svg class="ico-l"><use href="#i-chat"/></svg><div><b><span data-count="219">219</span></b><small>отзывов клиентов</small></div></div>
     <div class="stat reveal"><svg class="ico-l"><use href="#i-clock"/></svg><div><b>от 4 ч</b><small>перетяжка руля</small></div></div>
     <div class="stat reveal"><svg class="ico-l"><use href="#i-layers"/></svg><div><b>3 материала</b><small>кожа · экокожа · алькантара</small></div></div>
+  </div>
+</section>
+
+<!-- ============ SHOWCASE (real works slider) ============ -->
+<section class="showcase" id="showcase">
+  <div class="container showcase__in">
+    <div class="showcase__text">
+      <p class="eyebrow reveal">Свежие работы <i></i></p>
+      <h2 class="h2 reveal">Из нашего<br><span class="accent">цеха</span></h2>
+      <div class="show__cap reveal" aria-live="polite">
+        <span class="show__num" data-cap-num>01</span>
+        <b data-cap-title></b>
+        <span data-cap-sub></span>
+      </div>
+      <div class="show__ctrl reveal">
+        <button class="round" id="showPrev" aria-label="Предыдущая работа"><svg class="ico flip"><use href="#i-arrow"/></svg></button>
+        <button class="round" id="showNext" aria-label="Следующая работа"><svg class="ico"><use href="#i-arrow"/></svg></button>
+        <div class="show__dots" role="tablist" aria-label="Работы"></div>
+      </div>
+      <a href="#works" class="link-arrow reveal">Все работы <svg class="ico"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="show__stage reveal-img" aria-hidden="true">
+      <div class="show__slide is-active" style="background-image:url(img/w01.webp)" data-title="Сиденья в чёрную кожу" data-sub="Ромб, двойная строчка, контрастный кант"></div>
+      <div class="show__slide" style="background-image:url(img/w47.webp)" data-title="Руль Infiniti" data-sub="Перфорированная кожа и синяя нить"></div>
+      <div class="show__slide" style="background-image:url(img/w32.webp)" data-title="Коньячный салон" data-sub="Ромб на сиденьях и тоннеле"></div>
+      <div class="show__slide" style="background-image:url(img/w13.webp)" data-title="Задний ряд" data-sub="Бордо + беж, двухцветная перетяжка"></div>
+      <div class="show__slide" style="background-image:url(img/w19.webp)" data-title="Спортивные кресла" data-sub="Ромб и жёлтый кант"></div>
+    </div>
   </div>
 </section>
 
@@ -412,6 +427,6 @@
   </defs>
 </svg>
 
-<script src="js/main.js?v=6"></script>
+<script src="js/main.js?v=7"></script>
 </body>
 </html>

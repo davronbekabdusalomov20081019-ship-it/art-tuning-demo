@@ -143,15 +143,29 @@ function krasNow() {
   if (row) row.classList.add('is-today');
 })();
 
-// ===== Hero slider =====
-const slides = $$('.hero__slide');
-const dots = $$('.hero__dots button');
-const bars = $$('.hero__dots i');
-const cap = $('.hero__caption');
-const SLIDE_MS = 6000;
+// ===== Hero: slow parallax of the background photo =====
+const heroImg = $('.hero__bg img');
+addEventListener('scroll', () => {
+  if (scrollY < innerHeight) heroImg.style.transform = `translateY(${scrollY * 0.25}px) scale(1.06)`;
+}, { passive: true });
+
+// ===== Showcase slider (real works) =====
+const slides = $$('.show__slide');
+const dotsBox = $('.show__dots');
+dotsBox.innerHTML = slides.map((_, i) => `<button aria-label="Работа ${i + 1}"><i></i></button>`).join('');
+const dots = $$('button', dotsBox);
+const cap = $('.show__cap');
+const SLIDE_MS = 5500;
 let cur = 0;
 let timer;
+function setCaption() {
+  $('[data-cap-num]').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
+  $('[data-cap-title]').textContent = slides[cur].dataset.title;
+  $('[data-cap-sub]').textContent = slides[cur].dataset.sub;
+  cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
+}
 function goSlide(n) {
+  n = (n + slides.length) % slides.length;
   if (n === cur) return;
   const prev = slides[cur];
   prev.classList.remove('is-active');
@@ -159,20 +173,24 @@ function goSlide(n) {
   setTimeout(() => prev.classList.remove('is-leaving'), 1300);
   cur = n;
   slides[cur].classList.add('is-active');
-  dots.forEach((d, i) => d.classList.toggle('is-active', i === cur));
-  $('[data-cap-title]').textContent = slides[cur].dataset.title;
-  $('[data-cap-sub]').textContent = slides[cur].dataset.sub;
-  cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
+  setCaption();
   runBar();
 }
 function runBar() {
-  bars.forEach(b => b.classList.remove('is-run'));
-  const bar = bars[cur];
-  if (bar) { void bar.offsetWidth; bar.style.setProperty('--slide-ms', SLIDE_MS + 'ms'); bar.classList.add('is-run'); }
+  dots.forEach((d, i) => {
+    d.classList.toggle('is-active', i === cur);
+    d.classList.remove('is-run');
+  });
+  void dots[cur].offsetWidth;
+  dots[cur].style.setProperty('--slide-ms', SLIDE_MS + 'ms');
+  dots[cur].classList.add('is-run');
   clearTimeout(timer);
-  timer = setTimeout(() => goSlide((cur + 1) % slides.length), SLIDE_MS);
+  timer = setTimeout(() => goSlide(cur + 1), SLIDE_MS);
 }
 dots.forEach((d, i) => d.addEventListener('click', () => goSlide(i)));
+$('#showPrev').addEventListener('click', () => goSlide(cur - 1));
+$('#showNext').addEventListener('click', () => goSlide(cur + 1));
+setCaption();
 runBar();
 
 // ===== Prices: tabs =====
