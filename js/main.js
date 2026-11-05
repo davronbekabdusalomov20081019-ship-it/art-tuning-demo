@@ -442,3 +442,34 @@ $$('.reveal, .reveal-img').forEach(el => {
   if (idx > 0 && el.parentElement.children.length > 2) el.style.setProperty('--d', Math.min(idx, 6) * 0.08 + 's');
   revealObserver.observe(el);
 });
+
+// ===== Before / after comparison =====
+(function compareSlider() {
+  const box = $('#compare');
+  if (!box) return;
+  const range = $('.compare__range', box);
+  let touched = false;
+  const setPos = v => { box.style.setProperty('--pos', v + '%'); range.value = v; };
+  range.addEventListener('input', () => { touched = true; setPos(+range.value); });
+  range.addEventListener('pointerdown', () => { touched = true; box.classList.add('is-drag'); });
+  addEventListener('pointerup', () => box.classList.remove('is-drag'));
+
+  // One-time hint: the divider sweeps left and right when the block first appears
+  const hint = () => {
+    const keys = [50, 22, 78, 50];
+    const seg = 650;
+    const t0 = performance.now();
+    const ease = x => x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+    const tick = t => {
+      if (touched) return;
+      const k = Math.min((t - t0) / seg, keys.length - 1);
+      const i = Math.min(Math.floor(k), keys.length - 2);
+      setPos(Math.round(keys[i] + (keys[i + 1] - keys[i]) * ease(k - i)));
+      if (k < keys.length - 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  new IntersectionObserver((entries, obs) => {
+    if (entries[0].isIntersecting) { obs.disconnect(); setTimeout(hint, 600); }
+  }, { threshold: 0.5 }).observe(box);
+})();

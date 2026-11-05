@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.png">
   <link rel="preload" href="img/hero.webp" as="image">
-  <link rel="stylesheet" href="css/style.css?v=13">
+  <link rel="stylesheet" href="css/style.css?v=14">
 </head>
 <body>
 
@@ -120,6 +120,34 @@
     </div>
     <div class="gallery" id="galleryGrid"></div>
     <div class="works__more-wrap"><button class="btn btn--line" id="worksMore">Показать все работы</button></div>
+  </div>
+</section>
+
+<!-- ============ BEFORE / AFTER ============ -->
+<section class="ba" id="before-after">
+  <div class="container ba__in">
+    <div class="ba__text">
+      <p class="eyebrow reveal">До и после <i></i></p>
+      <h2 class="h2 reveal">Почувствуйте<br><span class="accent">разницу</span></h2>
+      <p class="ba__lead reveal">Потёртое серое кресло спорткара — и оно же после перетяжки. Потяните шторку, чтобы сравнить.</p>
+      <ul class="ba__list reveal">
+        <li><b>Материал</b><span>Чёрная кожа + жёлтые боковины</span></li>
+        <li><b>Строчка</b><span>Ромб с контрастной нитью</span></li>
+        <li><b>Детали</b><span>Вышивка на подголовнике, новый наполнитель</span></li>
+      </ul>
+      <a href="#calc" class="btn btn--dark reveal">Рассчитать своё кресло <svg class="ico"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="ba__wrap reveal-img">
+      <div class="compare" id="compare" style="--pos: 50%">
+        <img class="compare__after" src="img/ba1-after.webp" width="976" height="1087" alt="После: кресло в чёрной коже с жёлтыми боковинами и ромбом" loading="lazy">
+        <img class="compare__before" src="img/ba1-before.webp" width="976" height="1087" alt="До: потёртое серое кожаное кресло" loading="lazy">
+        <span class="compare__tag compare__tag--before">До</span>
+        <span class="compare__tag compare__tag--after">После</span>
+        <span class="compare__line" aria-hidden="true"><i><svg class="ico flip"><use href="#i-arrow"/></svg><svg class="ico"><use href="#i-arrow"/></svg></i></span>
+        <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после: сдвиньте, чтобы увидеть результат">
+      </div>
+      <p class="ba__note">Иллюстрация создана нейросетью на основе реальной работы ателье. Настоящие фото «до/после» — скоро.</p>
+    </div>
   </div>
 </section>
 
@@ -421,6 +449,6 @@
   </defs>
 </svg>
 
-<script src="js/main.js?v=9"></script>
+<script src="js/main.js?v=10"></script>
 </body>
 </html>
