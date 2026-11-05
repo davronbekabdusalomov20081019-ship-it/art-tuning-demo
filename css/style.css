@@ -539,3 +539,17 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .ba__thumbs button { flex: none; width: 64px; height: 64px; background: #dfe1e5 center / cover; opacity: .55; transition: opacity .25s, box-shadow .25s; }
 .ba__thumbs button:hover { opacity: .9; }
 .ba__thumbs button[aria-selected="true"] { opacity: 1; box-shadow: 0 0 0 2px var(--red); }
+
+/* Services: the 7th card fills the last row as a wide horizontal card */
+.card--wide { grid-column: 1 / -1; flex-direction: row; }
+.card--wide .card__img { flex: 0 0 calc((100% - 40px) / 3); aspect-ratio: auto; min-height: 240px; }
+.card--wide .card__body { padding: 32px 36px 28px; justify-content: center; }
+.card--wide p { max-width: 560px; font-size: 15px; }
+@media (max-width: 960px) {
+  .card--wide .card__img { flex-basis: calc((100% - 20px) / 2); }
+  .card--wide .card__body { padding: 24px; }
+}
+@media (max-width: 600px) {
+  .card--wide { flex-direction: column; }
+  .card--wide .card__img { flex: none; aspect-ratio: 4 / 3; min-height: 0; }
+}
