@@ -449,7 +449,7 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .mcalc { position: sticky; top: 92px; padding: 24px 22px 20px; }
 .mcalc__label { margin: 0 0 16px; font: 600 12px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; }
 .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 4px; margin-bottom: 8px; background: rgba(255,255,255,.05); border: 1px solid var(--dark-line); }
-.seg button { height: 34px; font: 600 11px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: #a9aeb5; transition: background .25s, color .25s; }
+.seg button { height: 34px; font: 600 12px/1 var(--display); letter-spacing: .06em; text-transform: uppercase; color: #a9aeb5; transition: background .25s, color .25s; }
 .seg button:hover { color: #fff; }
 .seg button[aria-checked="true"] { background: #fff; color: var(--ink); }
 .mcalc__opts { list-style: none; margin: 14px 0 0; padding: 0; border-top: 1px solid var(--dark-line); }
