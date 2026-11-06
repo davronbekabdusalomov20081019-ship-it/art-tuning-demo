@@ -157,17 +157,123 @@ function krasNow() {
   const h = now.getHours() + now.getMinutes() / 60;
   const start = day === 6 ? 10 : 9;
   const open = day !== 0 && h >= start && h < 19 && !(h >= 13 && h < 14);
-  const el = $('[data-open-status]');
-  if (open) { el.textContent = 'Открыто до 19:00'; el.classList.add('is-open'); }
+  if (open) $$('[data-open-status]').forEach(el => { el.textContent = 'Открыто до 19:00'; el.classList.add('is-open'); });
   const row = $(`#hours tr[data-d="${day}"]`);
   if (row) row.classList.add('is-today');
 })();
 
-// ===== Hero: slow parallax of the background photo =====
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+// ===== Hero: the name fills the screen width =====
+const hero = $('.hero');
+const heroName = $('.hero__name');
+const heroLines = $$('.hero__line', heroName);
+function fitHero() {
+  // Hero + marquee together take exactly one screen
+  document.documentElement.style.setProperty('--mqh', $('.mq').offsetHeight + 'px');
+  // Measure the text at 100px, then scale: by width (longest line) and by free height
+  heroName.style.fontSize = '100px';
+  const widest = Math.max(...heroLines.map(l => l.firstElementChild.getBoundingClientRect().width));
+  const cs = getComputedStyle(heroName);
+  const room = heroName.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const byWidth = 100 * room / widest * 0.97;
+  const byHeight = (heroName.clientHeight - 10) / (heroLines.length * 0.86);
+  heroName.style.fontSize = Math.floor(Math.min(byWidth, byHeight)) + 'px';
+  document.documentElement.classList.add('name-fit');
+}
+fitHero();
+document.fonts.ready.then(fitHero);
+let fitW = innerWidth;
+let fitTimer;
+addEventListener('resize', () => {
+  clearTimeout(fitTimer);
+  // Height-only changes (mobile address bar) must not re-fit, or the name jumps while scrolling
+  fitTimer = setTimeout(() => { if (innerWidth !== fitW) { fitW = innerWidth; fitHero(); } }, 150);
+});
+
+// ===== Hero on scroll: photo parallax, the two lines part left and right =====
 const heroImg = $('.hero__bg img');
-addEventListener('scroll', () => {
-  if (scrollY < innerHeight) heroImg.style.transform = `translateY(${scrollY * 0.25}px) scale(1.06)`;
-}, { passive: true });
+function heroScroll() {
+  if (scrollY > hero.offsetHeight) return;
+  heroImg.style.transform = `translateY(${scrollY * 0.25}px) scale(1.06)`;
+  if (reduceMotion) return;
+  const p = scrollY / hero.offsetHeight; // 0 at the top, 1 when the hero is gone
+  heroLines[0].style.transform = `translateX(${-18 * p}%)`;
+  heroLines[1].style.transform = `translateX(${18 * p}%)`;
+}
+addEventListener('scroll', heroScroll, { passive: true });
+heroScroll();
+
+// ===== Marquee: runs constantly, speeds up and leans while the page scrolls =====
+(function marquee() {
+  const t = $('#mq');
+  const words = ['Перетяжка салона', 'Руль и КПП', 'Потолок в алькантару', 'Ремонт сидений', 'Восстановление SRS', 'Шумоизоляция', 'Химчистка салона', 'Спецтехника и мото'];
+  // Two identical copies: when the first one has fully left, we jump back by its width — seamless loop
+  t.innerHTML = Array(2).fill(words.map(w => `<span>${w}</span>`).join('')).join('');
+  if (reduceMotion) return;
+  let x = 0, speed = 1, skew = 0, visible = true;
+  let lastY = scrollY, lastT = performance.now(), prev = lastT;
+  addEventListener('scroll', () => {
+    const now = performance.now();
+    const v = (scrollY - lastY) / Math.max(16, now - lastT) * 1000; // scroll speed, px per second
+    lastY = scrollY; lastT = now;
+    speed = Math.max(speed, 1 + Math.min(9, Math.abs(v) / 260));
+    skew = Math.max(-9, Math.min(9, -v / 220));
+  }, { passive: true });
+  new IntersectionObserver(e => { visible = e[0].isIntersecting; }).observe(t.parentElement);
+  const loop = now => {
+    const k = Math.min(3, (now - prev) / 16.7); // frame-rate independent
+    prev = now;
+    if (visible) {
+      x = (x - speed * 0.8 * k) % (t.scrollWidth / 2);
+      t.style.transform = `translateX(${x}px) skewX(${skew}deg)`;
+    }
+    speed += (1 - speed) * 0.05 * k; // calm back down to normal speed
+    skew *= Math.pow(0.9, k);
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+})();
+
+// ===== Services: photo follows the cursor over the list (mouse only) =====
+(function servicePreview() {
+  const list = $('#svc');
+  const box = $('.svc__preview');
+  if (!finePointer || reduceMotion) return;
+  const rows = $$('.svc__row', list);
+  $('.svc__preview-in', box).innerHTML = rows.map(r => `<img src="${r.dataset.img}" alt="">`).join('');
+  const imgs = $$('img', box);
+  let x = 0, y = 0, tx = 0, ty = 0, on = false, raf = 0;
+  const tick = () => {
+    const dx = tx - x;
+    x += dx * 0.15; y += (ty - y) * 0.15; // ease toward the cursor
+    const tilt = Math.max(-8, Math.min(8, dx * 0.05)); // tilt by horizontal speed
+    box.style.transform = `translate3d(${x}px, ${y}px, 0) rotate(${tilt}deg)`;
+    raf = on || Math.abs(dx) > 0.5 ? requestAnimationFrame(tick) : 0;
+  };
+  rows.forEach((r, i) => r.addEventListener('pointerenter', e => {
+    tx = e.clientX; ty = e.clientY;
+    if (!on) { x = tx; y = ty; }
+    on = true;
+    imgs.forEach((im, j) => im.classList.toggle('is-on', j === i));
+    box.classList.add('is-on');
+    if (!raf) raf = requestAnimationFrame(tick);
+  }));
+  list.addEventListener('pointermove', e => { tx = e.clientX; ty = e.clientY; });
+  list.addEventListener('pointerleave', () => { on = false; box.classList.remove('is-on'); });
+})();
+
+// ===== Magnetic buttons (mouse only) =====
+if (finePointer && !reduceMotion) {
+  $$('.mag').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * 0.12}px, ${(e.clientY - r.top - r.height / 2) * 0.25}px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
+}
 
 // ===== Showcase slider (real works) =====
 const slides = $$('.show__slide');
@@ -225,8 +331,8 @@ function showTab(id) {
 tabsEl.innerHTML = PRICES.map(c => `<button data-id="${c.id}" role="tab">${c.label}<small>${c.items.length}</small></button>`).join('');
 tabsEl.addEventListener('click', e => { const b = e.target.closest('button'); if (b) showTab(b.dataset.id); });
 showTab('salon');
-// Service cards open the matching price tab
-$$('.card[data-tab]').forEach(c => c.addEventListener('click', () => showTab(c.dataset.tab)));
+// Service rows open the matching price tab
+$$('.svc__row[data-tab]').forEach(c => c.addEventListener('click', () => showTab(c.dataset.tab)));
 
 // ===== Price calculator (compact, inside the prices block) =====
 // Every number comes from the atelier's price list on Yandex Maps.
