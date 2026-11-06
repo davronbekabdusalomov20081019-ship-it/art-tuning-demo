@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex">
   <link rel="icon" href="img/favicon.png">
   <link rel="preload" href="img/hero.webp" as="image">
-  <link rel="stylesheet" href="css/style.css?v=21">
+  <link rel="stylesheet" href="css/style.css?v=23">
 </head>
 <body>
 
@@ -31,7 +31,7 @@
       <a href="tel:+73912008158" class="header__phone">+7 (391) 200-81-58</a>
       <span class="header__hours" data-open-status>Пн–Пт 9–19, Сб 10–19</span>
     </div>
-    <a href="#book" class="btn btn--dark btn--sm header__cta">Записаться</a>
+    <a href="#book" class="btn btn--dark btn--sm header__cta" data-book aria-haspopup="dialog">Записаться</a>
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false"><span></span><span></span></button>
   </div>
 </header>
@@ -141,9 +141,7 @@
     <div class="stat reveal"><svg class="ico-l"><use href="#i-calendar"/></svg><div><b><span data-count="13">13</span>+ лет</b><small>работаем с 2012 года</small></div></div>
     <div class="stat reveal"><svg class="ico-l"><use href="#i-star"/></svg><div><b>5,0</b><small>рейтинг на Яндекс Картах</small></div></div>
     <div class="stat reveal"><svg class="ico-l"><use href="#i-chat"/></svg><div><b><span data-count="219">219</span></b><small>отзывов клиентов</small></div></div>
-    <div class="stat reveal"><svg class="ico-l"><use href="#i-clock"/></svg><div><b>от 4 ч</b><small>перетяжка руля</small></div></div>
-    <div class="stat reveal"><svg class="ico-l"><use href="#i-layers"/></svg><div><b>3 материала</b><small>кожа · экокожа · алькантара</small></div></div>
-  </div>
+    <div class="stat reveal"><svg class="ico-l"><use href="#i-clock"/></svg><div><b>от 4 ч</b><small>перетяжка руля</small></div></div>  </div>
 </section>
 
 <!-- ============ WORKS: examples gallery ============ -->
@@ -162,41 +160,38 @@
       <button data-f="wheel">Руль</button>
       <button data-f="seats">Сиденья</button>
       <button data-f="other">Другое</button>
+      <button data-f="ba" class="chips__ba">До / после</button>
     </div>
     <div class="gallery" id="galleryGrid"></div>
     <div class="works__more-wrap"><button class="btn btn--line" id="worksMore">Показать все работы</button></div>
-  </div>
-</section>
 
-<!-- ============ BEFORE / AFTER ============ -->
-<section class="ba" id="before-after">
-  <div class="container ba__in">
-    <div class="ba__text">
-      <p class="eyebrow reveal">До и после <i></i></p>
-      <h2 class="h2 reveal">Было —<br><span class="accent">стало</span></h2>
-      <p class="ba__lead reveal">Сдвиньте шторку и сравните: каким салон приезжает к нам и каким уезжает. Подборка пополняется новыми работами.</p>
-      <div class="ba__pair reveal" aria-live="polite">
-        <span class="ba__num" id="baNum">01 / 01</span>
-        <b class="ba__title" id="baTitle"></b>
-        <ul class="ba__list" id="baList"></ul>
+    <!-- Before / after: shown by the «До / после» chip instead of the grid -->
+    <div class="ba" id="baPanel" hidden>
+      <div class="ba__wrap">
+        <div class="compare" id="compare" style="--pos: 50%">
+          <img class="compare__after" alt="" loading="lazy">
+          <img class="compare__before" alt="" loading="lazy">
+          <span class="compare__tag compare__tag--before">До</span>
+          <span class="compare__tag compare__tag--after">После</span>
+          <span class="compare__line" aria-hidden="true"><i><svg class="ico flip"><use href="#i-arrow"/></svg><svg class="ico"><use href="#i-arrow"/></svg></i></span>
+          <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после: сдвиньте, чтобы увидеть результат">
+        </div>
+        <div class="ba__nav" id="baNav" hidden>
+          <button class="round" id="baPrev" aria-label="Предыдущая пара"><svg class="ico flip"><use href="#i-arrow"/></svg></button>
+          <div class="ba__thumbs" id="baThumbs" role="tablist" aria-label="Работы до и после"></div>
+          <button class="round" id="baNext" aria-label="Следующая пара"><svg class="ico"><use href="#i-arrow"/></svg></button>
+        </div>
       </div>
-      <a href="#calc" class="btn btn--dark reveal">Рассчитать свою работу <svg class="ico"><use href="#i-arrow"/></svg></a>
-    </div>
-    <div class="ba__wrap reveal-img">
-      <div class="compare" id="compare" style="--pos: 50%">
-        <img class="compare__after" alt="" loading="lazy">
-        <img class="compare__before" alt="" loading="lazy">
-        <span class="compare__tag compare__tag--before">До</span>
-        <span class="compare__tag compare__tag--after">После</span>
-        <span class="compare__line" aria-hidden="true"><i><svg class="ico flip"><use href="#i-arrow"/></svg><svg class="ico"><use href="#i-arrow"/></svg></i></span>
-        <input class="compare__range" type="range" min="0" max="100" value="50" aria-label="Сравнение до и после: сдвиньте, чтобы увидеть результат">
+      <div class="ba__text">
+        <p class="ba__lead">Сдвиньте шторку и сравните: каким салон приезжает к нам и каким уезжает. Подборка пополняется новыми работами.</p>
+        <div class="ba__pair" aria-live="polite">
+          <span class="ba__num" id="baNum">01 / 01</span>
+          <b class="ba__title" id="baTitle"></b>
+          <ul class="ba__list" id="baList"></ul>
+        </div>
+        <a href="#calc" class="btn btn--dark">Рассчитать свою работу <svg class="ico"><use href="#i-arrow"/></svg></a>
+        <p class="ba__note" id="baNote" hidden>Иллюстрация создана нейросетью на основе реальной работы ателье. Настоящие фото — скоро.</p>
       </div>
-      <div class="ba__nav" id="baNav" hidden>
-        <button class="round" id="baPrev" aria-label="Предыдущая пара"><svg class="ico flip"><use href="#i-arrow"/></svg></button>
-        <div class="ba__thumbs" id="baThumbs" role="tablist" aria-label="Работы до и после"></div>
-        <button class="round" id="baNext" aria-label="Следующая пара"><svg class="ico"><use href="#i-arrow"/></svg></button>
-      </div>
-      <p class="ba__note" id="baNote" hidden>Иллюстрация создана нейросетью на основе реальной работы ателье. Настоящие фото — скоро.</p>
     </div>
   </div>
 </section>
@@ -365,33 +360,25 @@
         <dl class="info reveal">
           <div><dt>Адрес</dt><dd>Красноярск, ул. Шахтёров, 4, стр. 3, этаж 1</dd></div>
           <div><dt>Телефон</dt><dd><a href="tel:+73912008158">+7 (391) 200-81-58</a></dd></div>
+          <div><dt>Режим</dt><dd>Пн–Пт 9:00–19:00, Сб 10:00–19:00<br>Вс — выходной · перерыв 13:00–14:00 <span class="info__status" data-open-status>Сейчас закрыто</span></dd></div>
           <div><dt>Остановка</dt><dd>«Площадь Победы» — 280 м пешком</dd></div>
           <div><dt>Парковка</dt><dd>Есть, в том числе для людей с инвалидностью</dd></div>
         </dl>
-        <table class="hours reveal" id="hours">
-          <tr data-d="1"><th>Понедельник</th><td>9:00 – 19:00</td></tr>
-          <tr data-d="2"><th>Вторник</th><td>9:00 – 19:00</td></tr>
-          <tr data-d="3"><th>Среда</th><td>9:00 – 19:00</td></tr>
-          <tr data-d="4"><th>Четверг</th><td>9:00 – 19:00</td></tr>
-          <tr data-d="5"><th>Пятница</th><td>9:00 – 19:00</td></tr>
-          <tr data-d="6"><th>Суббота</th><td>10:00 – 19:00</td></tr>
-          <tr data-d="0"><th>Воскресенье</th><td>выходной</td></tr>
-        </table>
-        <p class="hours__note reveal">Перерыв 13:00 – 14:00</p>
-        <figure class="entrance reveal-img">
-          <img src="img/w24.webp" alt="Вход в ателье под навесом, табличка ART TUNING" loading="lazy">
-          <figcaption>Вход — под навесом, ищите табличку <b>ART TUNING</b></figcaption>
-        </figure>
+        <div class="map__btns reveal">
+          <a class="btn btn--dark" href="https://yandex.ru/maps/?rtext=~56.025491,92.889395&amp;rtt=auto&amp;mode=routes" target="_blank" rel="noopener">Построить маршрут <svg class="ico"><use href="#i-arrow"/></svg></a>
+          <a class="btn btn--line" href="https://yandex.ru/maps/org/art_tyuning/29921340829/" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
+        </div>
       </div>
       <div class="map reveal" id="map">
         <a class="map__img" href="https://yandex.ru/maps/org/art_tyuning/29921340829/" target="_blank" rel="noopener" aria-label="Открыть «Арт Тюнинг» на Яндекс Картах">
           <img src="https://static-maps.yandex.ru/1.x/?ll=92.889395,56.025491&amp;z=16&amp;l=map&amp;size=650,450&amp;pt=92.889395,56.025491,pm2rdl&amp;lang=ru_RU" width="650" height="450" alt="Карта: Красноярск, ул. Шахтёров, 4, стр. 3" loading="lazy">
           <span class="map__pin"><b>АРТ ТЮНИНГ</b>ул. Шахтёров, 4, стр. 3</span>
         </a>
-        <div class="map__btns">
-          <a class="btn btn--dark" href="https://yandex.ru/maps/?rtext=~56.025491,92.889395&amp;rtt=auto&amp;mode=routes" target="_blank" rel="noopener">Построить маршрут <svg class="ico"><use href="#i-arrow"/></svg></a>
-          <a class="btn btn--line" href="https://yandex.ru/maps/org/art_tyuning/29921340829/" target="_blank" rel="noopener">Открыть в Яндекс Картах</a>
-        </div>
+        <!-- Entrance photo as a card over the map corner -->
+        <figure class="entrance">
+          <img src="img/w24.webp" alt="Вход в ателье под навесом, табличка ART TUNING" loading="lazy">
+          <figcaption>Вход под навесом — табличка <b>ART TUNING</b></figcaption>
+        </figure>
       </div>
     </div>
   </div>
@@ -421,7 +408,37 @@
 </footer>
 
 <!-- Mobile sticky booking bar -->
-<div class="mbar"><a href="tel:+73912008158" class="btn btn--line">Позвонить</a><a href="#book" class="btn btn--dark">Записаться</a></div>
+<div class="mbar"><a href="tel:+73912008158" class="btn btn--line">Позвонить</a><a href="#book" class="btn btn--dark" data-book aria-haspopup="dialog">Записаться</a></div>
+
+<!-- Booking window: opened by the «Записаться» buttons in the header and the mobile bar -->
+<dialog class="book" id="bookDlg" aria-labelledby="bookTitle">
+  <button class="book__close round" type="button" data-close aria-label="Закрыть">✕</button>
+  <p class="eyebrow">Запись <i></i></p>
+  <h2 class="h3" id="bookTitle">Записаться в ателье</h2>
+  <p class="book__lead">Бот спросит авто, услугу и удобное время — мастер подтвердит запись. Можно сразу прислать фото салона, подскажем цену.</p>
+  <div class="book__btns">
+    <a class="qb qb--ink" data-bot="max" href="#" target="_blank" rel="noopener">
+      <span class="qb__ico"><svg class="ico"><use href="#i-max"/></svg></span>
+      <span><b>MAX</b><small>написать боту</small></span>
+      <svg class="ico qb__go"><use href="#i-arrow"/></svg>
+    </a>
+    <a class="qb qb--line" data-bot="telegram" href="#" target="_blank" rel="noopener">
+      <span class="qb__ico"><svg class="ico"><use href="#i-tg"/></svg></span>
+      <span><b>Telegram</b><small>написать боту</small></span>
+      <svg class="ico qb__go"><use href="#i-arrow"/></svg>
+    </a>
+    <a class="qb qb--red" href="tel:+73912008158">
+      <span class="qb__ico"><svg class="ico"><use href="#i-phone"/></svg></span>
+      <span><b>Позвонить</b><small>+7 (391) 200-81-58</small></span>
+      <svg class="ico qb__go"><use href="#i-arrow"/></svg>
+    </a>
+  </div>
+  <dl class="book__info">
+    <div><dt>Адрес</dt><dd>ул. Шахтёров, 4, стр. 3, этаж 1 · <a href="https://yandex.ru/maps/?rtext=~56.025491,92.889395&amp;rtt=auto&amp;mode=routes" target="_blank" rel="noopener">маршрут</a></dd></div>
+    <div><dt>Режим</dt><dd>Пн–Пт 9–19, Сб 10–19, перерыв 13–14 <span class="info__status" data-open-status>Сейчас закрыто</span></dd></div>
+  </dl>
+  <p class="book__note">Сайт не собирает персональные данные — запись идёт в мессенджере.</p>
+</dialog>
 
 <!-- Lightbox -->
 <div class="lb" id="lb" hidden>
@@ -456,6 +473,6 @@
   </defs>
 </svg>
 
-<script src="js/main.js?v=15"></script>
+<script src="js/main.js?v=16"></script>
 </body>
 </html>

@@ -158,10 +158,26 @@ function krasNow() {
   const h = now.getHours() + now.getMinutes() / 60;
   const start = day === 6 ? 10 : 9;
   const open = day !== 0 && h >= start && h < 19 && !(h >= 13 && h < 14);
-  if (open) $$('[data-open-status]').forEach(el => { el.textContent = 'Открыто до 19:00'; el.classList.add('is-open'); });
-  const row = $(`#hours tr[data-d="${day}"]`);
-  if (row) row.classList.add('is-today');
+  const lunch = day !== 0 && h >= 13 && h < 14;
+  $$('[data-open-status]').forEach(el => {
+    if (open) { el.textContent = 'Открыто до 19:00'; el.classList.add('is-open'); }
+    else if (lunch) el.textContent = 'Перерыв до 14:00';
+  });
 })();
+
+// ===== Booking window: «Записаться» in the header / mobile bar shows bots and contacts =====
+const bookDlg = $('#bookDlg');
+$$('[data-book]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  bookDlg.showModal();
+}));
+$('[data-close]', bookDlg).addEventListener('click', () => bookDlg.close());
+// A click on the dimmed backdrop (outside the window box) closes it; Esc closes it natively
+bookDlg.addEventListener('click', e => {
+  const r = bookDlg.getBoundingClientRect();
+  const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+  if (!inside) bookDlg.close();
+});
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -433,6 +449,15 @@ $('#chips').addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
   $$('#chips button').forEach(x => x.classList.toggle('is-active', x === b));
+  // «До / после» swaps the photo grid for the comparison slider
+  const ba = b.dataset.f === 'ba';
+  $('#baPanel').hidden = !ba;
+  gallery.hidden = ba;
+  if (ba) {
+    moreBtn.parentElement.hidden = true;
+    $('.works__count').innerHTML = `<b>${BEFORE_AFTER.length}</b> ${BEFORE_AFTER.length === 1 ? 'пара' : 'пары'} «до и после»`;
+    return;
+  }
   filter = b.dataset.f;
   expanded = false;
   renderGallery();
