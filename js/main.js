@@ -179,7 +179,7 @@ bookDlg.addEventListener('click', e => {
   if (!inside) bookDlg.close();
 });
 
-const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Animations always run, even with the system «reduce motion» setting (owner's decision, 2026-11-06)
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
 // ===== Hero: the name fills the screen width =====
@@ -225,7 +225,6 @@ function heroScroll() {
   heroTick = false;
   const y = Math.min(scrollY, heroH); // past the hero nothing changes, but land exactly on the end
   heroImg.style.transform = `translate3d(0, ${y * 0.25}px, 0) scale(1.06)`;
-  if (reduceMotion) return;
   const p = y / heroH; // 0 at the top, 1 when the hero is gone
   heroLines[0].style.transform = `translate3d(${-18 * p}%, 0, 0)`;
   heroLines[1].style.transform = `translate3d(${18 * p}%, 0, 0)`;
@@ -244,7 +243,6 @@ heroScroll();
   const words = ['Перетяжка салона', 'Руль и КПП', 'Потолок в алькантару', 'Ремонт сидений', 'Восстановление SRS', 'Шумоизоляция', 'Химчистка салона', 'Спецтехника и мото'];
   // Two identical copies: when the first one has fully left, we jump back by its width — seamless loop
   t.innerHTML = Array(2).fill(words.map(w => `<span>${w}</span>`).join('')).join('');
-  if (reduceMotion) return;
   let half = t.scrollWidth / 2; // width of one copy, re-measured on resize (not every frame)
   addEventListener('resize', () => { half = t.scrollWidth / 2; });
   // Touch screens: a plain CSS animation. It runs on the compositor, so it never stutters
@@ -282,7 +280,7 @@ heroScroll();
 (function servicePreview() {
   const list = $('#svc');
   const box = $('.svc__preview');
-  if (!finePointer || reduceMotion) return;
+  if (!finePointer) return;
   const rows = $$('.svc__row', list);
   $('.svc__preview-in', box).innerHTML = rows.map(r => `<img src="${r.dataset.img}" alt="">`).join('');
   const imgs = $$('img', box);
@@ -307,7 +305,7 @@ heroScroll();
 })();
 
 // ===== Magnetic buttons (mouse only) =====
-if (finePointer && !reduceMotion) {
+if (finePointer) {
   $$('.mag').forEach(el => {
     el.addEventListener('pointermove', e => {
       const r = el.getBoundingClientRect();

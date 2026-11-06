@@ -365,11 +365,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 .js .reveal-img.is-in { clip-path: inset(0); }
 .js .reveal-img.is-in img { transform: none; }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-  .js .reveal, .js .reveal-img { opacity: 1; transform: none; clip-path: none; }
-  .js .reveal-img img { transform: none; }
-}
 
 /* ===== Responsive ===== */
 @media (max-width: 1180px) {
@@ -588,7 +583,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   .shot__n { display: none; }
   .shot figcaption b, .shot.big figcaption b { font-size: 11px; }
 }
-@media (prefers-reduced-motion: reduce) { .js .shot { clip-path: none; } .js .shot img { transform: none; } }
 
 /* «До / после» chip stands out a little from the category chips */
 .chips__ba { border-color: var(--red) !important; color: var(--red); }
@@ -674,4 +668,3 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
   .qb:active, .btn:active, .svc__row:active { transform: scale(.98); }
   .svc__row:active { background: #e6e8eb; }
 }
-@media (prefers-reduced-motion: reduce) { .mq__t--css { animation: none; } }
