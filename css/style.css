@@ -171,14 +171,23 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 
 @keyframes cap-in { from { opacity: 0; transform: translateY(10px); } }
 
-/* ===== Stats ===== */
-.stats { background: var(--paper); border-bottom: 1px solid var(--line); }
-.stats__in { display: grid; grid-template-columns: repeat(5, 1fr); }
-.stat { display: flex; align-items: center; gap: 16px; padding: 34px 20px; border-left: 1px solid var(--line); }
+/* ===== Stats: big numbers on a dark band ===== */
+.stats { background: var(--dark); color: #fff; }
+.stats__in { display: grid; grid-template-columns: repeat(4, 1fr); }
+.stat { position: relative; padding: clamp(36px, 4vw, 56px) clamp(16px, 2.4vw, 36px); border-left: 1px solid var(--dark-line); }
 .stat:first-child { border-left: 0; padding-left: 0; }
-.stat .ico-l { color: var(--red); }
-.stat b { display: block; font: 600 22px/1.1 var(--display); }
-.stat small { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); line-height: 1.3; }
+.stat__num { display: flex; align-items: baseline; gap: .08em; font: 600 clamp(48px, 5.6vw, 84px)/.9 var(--display); letter-spacing: -.02em; white-space: nowrap; }
+.stat__num i { font-style: normal; font-size: .42em; color: var(--red-2); }
+.stat__num small { margin-right: .12em; font-size: .3em; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: #9aa0a8; }
+.stat__label { display: block; margin-top: 16px; padding-top: 14px; border-top: 2px solid var(--red); width: fit-content; font-size: 14px; line-height: 1.4; color: #b9bdc3; }
+@media (max-width: 760px) {
+  .stats__in { grid-template-columns: 1fr 1fr; }
+  .stat { padding: 28px 0 28px 18px; }
+  .stat:nth-child(odd) { border-left: 0; padding-left: 0; }
+  .stat:nth-child(n+3) { border-top: 1px solid var(--dark-line); }
+  .stat__num { font-size: clamp(40px, 12vw, 56px); }
+  .stat__label { margin-top: 12px; padding-top: 10px; font-size: 13px; }
+}
 
 /* ===== About ===== */
 .about { padding: clamp(80px, 10vw, 140px) 0; overflow: hidden; }
@@ -372,9 +381,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   .header__contact { display: none; }
   .why { grid-template-columns: repeat(2, 1fr); }
   .why__head { grid-column: 1 / -1; flex-direction: row; align-items: center; }
-  .stats__in { grid-template-columns: repeat(3, 1fr); }
-  .stat:nth-child(4) { border-left: 0; padding-left: 0; }
-  .stat:nth-child(n+4) { border-top: 1px solid var(--line); }
 }
 @media (max-width: 960px) {
   .nav { position: fixed; inset: 68px 0 auto; flex-direction: column; gap: 0; background: var(--bg); padding: 8px var(--pad) 24px; border-bottom: 1px solid var(--line); transform: translateY(-120%); transition: transform .45s var(--ease); z-index: -1; }
@@ -433,12 +439,6 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
   .rating--glass { padding: 10px 14px; gap: 10px; }
   .rating--glass .rating__val { font-size: 24px; }
   .rating--glass .rating__txt { white-space: nowrap; font-size: 11px; }
-  .stats__in { grid-template-columns: 1fr 1fr; }
-  .stat { padding: 22px 12px 22px 0; border-left: 0; gap: 12px; }
-  .stat:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .stat:last-child { grid-column: 1 / -1; }
-  .stat b { font-size: 18px; }
-  .stat .ico-l { width: 26px; height: 26px; }
   .facts { grid-template-columns: 1fr; }
   .about__media { height: 400px; }
   .why { grid-template-columns: 1fr; }
@@ -668,3 +668,12 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
   .qb:active, .btn:active, .svc__row:active { transform: scale(.98); }
   .svc__row:active { background: #e6e8eb; }
 }
+
+/* ===== Phones / tablets («lite», class set by JS): a still page =====
+   No scroll or entrance animations — they made the start of the scroll stutter on a real phone.
+   Only the marquee keeps running. Taps still give feedback (menu, FAQ, reviews arrows, booking window). */
+.lite .reveal, .lite .reveal-img, .lite .shot { opacity: 1 !important; transform: none !important; clip-path: none !important; transition: none !important; }
+.lite .reveal-img img, .lite .shot img { transform: none !important; transition: none !important; }
+.lite .hero__bg img, .lite .hero__line > span, .lite .hero__tag, .lite .hero__meta, .lite .hero__quick,
+.lite .price-row, .lite .ba, .lite .ba__pair *, .lite .mcalc__total b { animation: none !important; }
+.lite .header, .lite .header__in, .lite .mbar, .lite .step::after { transition: none !important; }

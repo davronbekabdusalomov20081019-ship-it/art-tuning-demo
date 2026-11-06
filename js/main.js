@@ -179,8 +179,12 @@ bookDlg.addEventListener('click', e => {
   if (!inside) bookDlg.close();
 });
 
-// Animations always run, even with the system «reduce motion» setting (owner's decision, 2026-11-06)
+// Animations ignore the system «reduce motion» setting (owner's decision, 2026-11-06)
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+// Phones and tablets get a still page: scroll and entrance animations made the start of the scroll
+// stutter on a real phone. Only the marquee keeps running there. Owner's decision, 2026-11-06.
+const lite = !finePointer || matchMedia('(max-width: 960px)').matches;
+document.documentElement.classList.toggle('lite', lite);
 
 // ===== Hero: the name fills the screen width =====
 const hero = $('.hero');
@@ -230,12 +234,14 @@ function heroScroll() {
   heroLines[1].style.transform = `translate3d(${18 * p}%, 0, 0)`;
 }
 // Scroll events can fire several times per frame: write styles at most once per frame
-addEventListener('scroll', () => {
-  if (scrollY > heroH && heroScroll.done) return;
-  heroScroll.done = scrollY > heroH;
-  if (!heroTick) { heroTick = true; requestAnimationFrame(heroScroll); }
-}, { passive: true });
-heroScroll();
+if (!lite) {
+  addEventListener('scroll', () => {
+    if (scrollY > heroH && heroScroll.done) return;
+    heroScroll.done = scrollY > heroH;
+    if (!heroTick) { heroTick = true; requestAnimationFrame(heroScroll); }
+  }, { passive: true });
+  heroScroll();
+}
 
 // ===== Marquee: runs constantly, speeds up and leans while the page scrolls =====
 (function marquee() {
@@ -437,7 +443,7 @@ let filter = 'all';
 let expanded = false;
 // Each photo opens when it scrolls into view
 const shotObserver = new IntersectionObserver(entries => entries.forEach(e => {
-  if (e.isIntersecting) { e.target.classList.add('is-in'); shotObserver.unobserve(e.target); }
+  if (e.isIntersecting || lite) { e.target.classList.add('is-in'); shotObserver.unobserve(e.target); }
 }), { rootMargin: '0px 0px -8% 0px' });
 
 const plural = n => {
@@ -560,8 +566,9 @@ const revealObserver = new IntersectionObserver(entries => {
   });
 }, { rootMargin: '0px 0px -10% 0px' });
 
-// Stagger siblings that reveal together
+// Stagger siblings that reveal together (phones: everything is simply shown, numbers are final)
 $$('.reveal, .reveal-img').forEach(el => {
+  if (lite) { el.classList.add('is-in'); return; }
   const sibs = [...el.parentElement.children].filter(c => c.matches('.reveal, .reveal-img'));
   const idx = sibs.indexOf(el);
   if (idx > 0 && el.parentElement.children.length > 2) el.style.setProperty('--d', Math.min(idx, 6) * 0.08 + 's');
@@ -636,6 +643,6 @@ $$('.reveal, .reveal-img').forEach(el => {
     requestAnimationFrame(tick);
   };
   new IntersectionObserver((entries, obs) => {
-    if (entries[0].isIntersecting) { obs.disconnect(); setTimeout(hint, 600); }
+    if (entries[0].isIntersecting) { obs.disconnect(); if (!lite) setTimeout(hint, 600); }
   }, { threshold: 0.5 }).observe(box);
 })();
