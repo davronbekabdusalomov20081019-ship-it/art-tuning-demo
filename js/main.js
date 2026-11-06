@@ -51,10 +51,11 @@ const PRICES = [
 
 // [file, category, caption, size] — size: '' | 'tall' | 'wide'
 const WORKS = [
-  ['w17', 'salon', 'Mercedes G-класс — коньячная кожа', 'wide'],
+  // The first photo is shown big; G-class (w17) is not first because it is already the hero background
   ['w01', 'seats', 'Сиденья в чёрную кожу с ромбом', 'tall'],
   ['w47', 'wheel', 'Infiniti — руль в перфорированную кожу', 'tall'],
   ['w45', 'seats', 'Бордовая кожа, двойная строчка', ''],
+  ['w17', 'salon', 'Mercedes G-класс — коньячная кожа', 'wide'],
   ['w32', 'salon', 'Коньячный ромб и тоннель', 'tall'],
   ['w10', 'wheel', 'Toyota — руль с контрастной вставкой', 'wide'],
   ['w19', 'seats', 'Спортивные кресла, жёлтый кант', 'tall'],
@@ -275,50 +276,6 @@ if (finePointer && !reduceMotion) {
   });
 }
 
-// ===== Showcase slider (real works) =====
-const slides = $$('.show__slide');
-const dotsBox = $('.show__dots');
-dotsBox.innerHTML = slides.map((_, i) => `<button aria-label="Работа ${i + 1}"><i></i></button>`).join('');
-const dots = $$('button', dotsBox);
-const cap = $('.show__cap');
-const SLIDE_MS = 5500;
-let cur = 0;
-let timer;
-function setCaption() {
-  $('[data-cap-num]').textContent = String(cur + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
-  $('[data-cap-title]').textContent = slides[cur].dataset.title;
-  $('[data-cap-sub]').textContent = slides[cur].dataset.sub;
-  cap.classList.remove('swap'); void cap.offsetWidth; cap.classList.add('swap');
-}
-function goSlide(n) {
-  n = (n + slides.length) % slides.length;
-  if (n === cur) return;
-  const prev = slides[cur];
-  prev.classList.remove('is-active');
-  prev.classList.add('is-leaving');
-  setTimeout(() => prev.classList.remove('is-leaving'), 1300);
-  cur = n;
-  slides[cur].classList.add('is-active');
-  setCaption();
-  runBar();
-}
-function runBar() {
-  dots.forEach((d, i) => {
-    d.classList.toggle('is-active', i === cur);
-    d.classList.remove('is-run');
-  });
-  void dots[cur].offsetWidth;
-  dots[cur].style.setProperty('--slide-ms', SLIDE_MS + 'ms');
-  dots[cur].classList.add('is-run');
-  clearTimeout(timer);
-  timer = setTimeout(() => goSlide(cur + 1), SLIDE_MS);
-}
-dots.forEach((d, i) => d.addEventListener('click', () => goSlide(i)));
-$('#showPrev').addEventListener('click', () => goSlide(cur - 1));
-$('#showNext').addEventListener('click', () => goSlide(cur + 1));
-setCaption();
-runBar();
-
 // ===== Prices: tabs =====
 const tabsEl = $('#tabs');
 const listEl = $('#priceList');
@@ -435,11 +392,14 @@ renderSummary();
 const gallery = $('#galleryGrid');
 const moreBtn = $('#worksMore');
 const PREVIEW = 8; // photos visible before "show all"
-// Photos already shown in the featured slider go last, so the preview shows new ones
-const SLIDER_FILES = $$('.show__slide').map(s => s.style.backgroundImage.match(/(w\d+)\.webp/)[1]);
+const CAT_NAMES = { salon: 'Салон', wheel: 'Руль', seats: 'Сиденья', other: 'Другое' };
 let shown = [];
 let filter = 'all';
 let expanded = false;
+// Each photo opens when it scrolls into view
+const shotObserver = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('is-in'); shotObserver.unobserve(e.target); }
+}), { rootMargin: '0px 0px -8% 0px' });
 
 const plural = n => {
   const m10 = n % 10, m100 = n % 100;
@@ -450,14 +410,21 @@ const plural = n => {
 
 function renderGallery() {
   shown = WORKS.filter(w => filter === 'all' || w[1] === filter);
-  if (filter === 'all') {
-    shown = [...shown.filter(w => !SLIDER_FILES.includes(w[0])), ...shown.filter(w => SLIDER_FILES.includes(w[0]))];
-  }
-  const visible = expanded ? shown : shown.slice(0, PREVIEW);
-  gallery.classList.toggle('is-preview', !expanded && shown.length > 4);
-  gallery.innerHTML = visible.map(([f, , capText, size], i) =>
-    `<figure class="shot ${size}" data-i="${i}" style="animation-delay:${Math.min(i % PREVIEW, 12) * 40}ms">
-      <img src="img/${f}.webp" alt="${capText}" loading="lazy"><figcaption>${capText}</figcaption></figure>`).join('');
+  const preview = !expanded && shown.length > PREVIEW;
+  const visible = preview ? shown.slice(0, PREVIEW) : shown;
+  // Preview = a tidy mosaic: 1 big + 1 wide + 6 small fill exactly 3 rows of 4 (6 rows of 2 on a phone).
+  // Full list uses each photo's own shape; the first one is always big.
+  const sizeOf = (size, i) => {
+    if (i === 0 && visible.length >= 6) return 'big';
+    if (preview) return i === 5 ? 'wide' : '';
+    return size;
+  };
+  gallery.innerHTML = visible.map(([f, cat, capText, size], i) =>
+    `<figure class="shot ${sizeOf(size, i)}" data-i="${i}" style="--d:${(i % 4) * 0.08}s">
+      <img src="img/${f}.webp" alt="${capText}" loading="lazy">
+      <span class="shot__zoom" aria-hidden="true">+</span>
+      <figcaption><span class="shot__n">${String(i + 1).padStart(2, '0')} · ${CAT_NAMES[cat]}</span><b>${capText}</b></figcaption></figure>`).join('');
+  $$('.shot', gallery).forEach(s => shotObserver.observe(s));
   $('.works__count').innerHTML = `<b>${shown.length}</b> ${plural(shown.length)} — каждый шов вблизи`;
   moreBtn.parentElement.hidden = expanded || shown.length <= PREVIEW;
   moreBtn.textContent = `Показать все ${shown.length}`;
