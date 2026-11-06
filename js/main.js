@@ -111,16 +111,27 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 document.documentElement.classList.add('js');
 
+// Animations ignore the system «reduce motion» setting (owner's decision, 2026-11-06)
+const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+// Phones and tablets get a still page: scroll and entrance animations made the start of the scroll
+// stutter on a real phone. Only the marquee keeps running there. Owner's decision, 2026-11-06.
+const lite = !finePointer || matchMedia('(max-width: 960px)').matches;
+document.documentElement.classList.toggle('lite', lite);
+
 // ===== Bot links =====
 $$('[data-bot]').forEach(a => { a.href = BOTS[a.dataset.bot]; });
 
 // ===== Header: solid on scroll, active section, mobile menu =====
+// On phones the header is always dark (CSS): switching it mid-scroll caused a visible hitch on iPhone.
 const header = $('#header');
 const mbar = $('.mbar');
+let solid = null, barOn = null, nearTop = null;
 const onScroll = () => {
-  header.classList.toggle('is-solid', scrollY > 40);
-  mbar.classList.toggle('is-on', scrollY > innerHeight * 0.7);
-  if (scrollY < innerHeight * 0.6) $$('#nav a').forEach(a => a.classList.remove('is-current'));
+  // Touch the DOM only when a state really changes, not on every scroll event
+  const s = scrollY > 40, b = scrollY > innerHeight * 0.7, t = scrollY < innerHeight * 0.6;
+  if (!lite && s !== solid) { solid = s; header.classList.toggle('is-solid', s); }
+  if (b !== barOn) { barOn = b; mbar.classList.toggle('is-on', b); }
+  if (t !== nearTop) { nearTop = t; if (t) $$('#nav a').forEach(a => a.classList.remove('is-current')); }
 };
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
@@ -178,13 +189,6 @@ bookDlg.addEventListener('click', e => {
   const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
   if (!inside) bookDlg.close();
 });
-
-// Animations ignore the system «reduce motion» setting (owner's decision, 2026-11-06)
-const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-// Phones and tablets get a still page: scroll and entrance animations made the start of the scroll
-// stutter on a real phone. Only the marquee keeps running there. Owner's decision, 2026-11-06.
-const lite = !finePointer || matchMedia('(max-width: 960px)').matches;
-document.documentElement.classList.toggle('lite', lite);
 
 // ===== Hero: the name fills the screen width =====
 const hero = $('.hero');

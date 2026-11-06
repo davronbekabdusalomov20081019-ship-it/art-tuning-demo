@@ -677,3 +677,8 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
 .lite .hero__bg img, .lite .hero__line > span, .lite .hero__tag, .lite .hero__meta, .lite .hero__quick,
 .lite .price-row, .lite .ba, .lite .ba__pair *, .lite .mcalc__total b { animation: none !important; }
 .lite .header, .lite .header__in, .lite .mbar, .lite .step::after { transition: none !important; }
+
+/* iPhone «rubber band» at the top/bottom shows the document background: make it dark like the hero and footer */
+html { background: var(--dark); }
+/* Phones / tablets: the header is always dark — no switch mid-scroll (it hitched on iPhone) */
+.lite .header { background: var(--dark); color: #fff; box-shadow: 0 1px 0 var(--dark-line); }
