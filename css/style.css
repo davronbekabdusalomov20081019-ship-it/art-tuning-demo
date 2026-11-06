@@ -109,8 +109,9 @@ h1, h2, h3 { margin: 0; font-weight: 500; }
 /* flex-basis 0: the box height = free space, so JS can fit the letters into it */
 .hero__name { position: relative; z-index: 2; flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 12px; font: 600 100px/.86 var(--display); text-transform: uppercase; letter-spacing: -.02em; pointer-events: none; }
 .hero__line { display: block; text-align: center; white-space: nowrap; will-change: transform; }
-.hero__line > span { display: inline-block; text-shadow: 0 8px 50px rgba(0,0,0,.4); animation: name-in 1.3s var(--ease) both; }
-.hero__line + .hero__line > span { animation-delay: .12s; }
+.hero__line > span { display: inline-block; text-shadow: 0 8px 50px rgba(0,0,0,.4); }
+.name-fit .hero__line > span { animation: name-in 1.3s var(--ease) both; }
+.name-fit .hero__line + .hero__line > span { animation-delay: .12s; }
 @keyframes name-in { from { transform: translateY(60%); opacity: 0; } }
 .js:not(.name-fit) .hero__name { visibility: hidden; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -643,3 +644,34 @@ html:has(.book[open]) { overflow: hidden; }
   .book[open] { animation-name: sheet-in; }
   @keyframes sheet-in { from { transform: translateY(100%); } }
 }
+
+/* ===== Phones and touch screens: smoothness ===== */
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+/* Marquee on touch: CSS animation on the compositor (duration is set by JS from the text width) */
+.mq__t--css { animation: mq-run 40s linear infinite; }
+@keyframes mq-run { to { transform: translate3d(-50%, 0, 0); } }
+@media (max-width: 960px) {
+  /* A blur under fixed bars is recomputed every scroll frame and stutters on weaker phones */
+  .header.is-solid { background: var(--bg); backdrop-filter: none; }
+  .mbar { background: var(--bg); backdrop-filter: none; }
+}
+/* No hover on touch: a tapped button must not stay in its hover colours */
+@media (hover: none) {
+  .qb--light:hover { background: #fff; color: var(--ink); }
+  .qb--light:hover .qb__ico { background: var(--ink); color: #fff; }
+  .qb--red:hover, .book .qb--red:hover { background: var(--red); color: #fff; }
+  .qb--red:hover .qb__ico { background: rgba(255,255,255,.18); color: #fff; }
+  .qb--glass:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .qb--glass:hover .qb__ico { background: rgba(255,255,255,.14); color: #fff; }
+  .qb--ink:hover { background: var(--ink); }
+  .qb--line:hover { background: transparent; color: var(--ink); }
+  .qb--line:hover .qb__ico { background: var(--ink); color: #fff; }
+  .qb:hover .qb__go, .btn:hover .ico { transform: none; }
+  .btn--dark:hover { background: var(--ink); }
+  .btn--line:hover { background: transparent; color: inherit; }
+  .header:not(.is-solid) .btn--dark:hover { background: #fff; color: var(--ink); }
+  /* Instead: a short press feedback */
+  .qb:active, .btn:active, .svc__row:active { transform: scale(.98); }
+  .svc__row:active { background: #e6e8eb; }
+}
+@media (prefers-reduced-motion: reduce) { .mq__t--css { animation: none; } }

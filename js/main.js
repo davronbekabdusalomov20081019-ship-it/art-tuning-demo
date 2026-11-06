@@ -197,10 +197,19 @@ function fitHero() {
   const byWidth = 100 * room / widest * 0.97;
   const byHeight = (heroName.clientHeight - 10) / (heroLines.length * 0.86);
   heroName.style.fontSize = Math.floor(Math.min(byWidth, byHeight)) + 'px';
-  document.documentElement.classList.add('name-fit');
+  heroH = hero.offsetHeight;
 }
+let heroH = hero.offsetHeight;
+// Show the name only once the real font is loaded: otherwise it appears in a fallback font
+// and visibly jumps to a new size a moment later. The intro animation starts at that moment too.
+const showName = () => {
+  if (document.documentElement.classList.contains('name-fit')) return;
+  fitHero();
+  document.documentElement.classList.add('name-fit');
+};
 fitHero();
-document.fonts.ready.then(fitHero);
+document.fonts.ready.then(showName);
+setTimeout(showName, 2500); // safety net if the font never arrives
 let fitW = innerWidth;
 let fitTimer;
 addEventListener('resize', () => {
@@ -211,15 +220,22 @@ addEventListener('resize', () => {
 
 // ===== Hero on scroll: photo parallax, the two lines part left and right =====
 const heroImg = $('.hero__bg img');
+let heroTick = false;
 function heroScroll() {
-  if (scrollY > hero.offsetHeight) return;
-  heroImg.style.transform = `translateY(${scrollY * 0.25}px) scale(1.06)`;
+  heroTick = false;
+  const y = Math.min(scrollY, heroH); // past the hero nothing changes, but land exactly on the end
+  heroImg.style.transform = `translate3d(0, ${y * 0.25}px, 0) scale(1.06)`;
   if (reduceMotion) return;
-  const p = scrollY / hero.offsetHeight; // 0 at the top, 1 when the hero is gone
-  heroLines[0].style.transform = `translateX(${-18 * p}%)`;
-  heroLines[1].style.transform = `translateX(${18 * p}%)`;
+  const p = y / heroH; // 0 at the top, 1 when the hero is gone
+  heroLines[0].style.transform = `translate3d(${-18 * p}%, 0, 0)`;
+  heroLines[1].style.transform = `translate3d(${18 * p}%, 0, 0)`;
 }
-addEventListener('scroll', heroScroll, { passive: true });
+// Scroll events can fire several times per frame: write styles at most once per frame
+addEventListener('scroll', () => {
+  if (scrollY > heroH && heroScroll.done) return;
+  heroScroll.done = scrollY > heroH;
+  if (!heroTick) { heroTick = true; requestAnimationFrame(heroScroll); }
+}, { passive: true });
 heroScroll();
 
 // ===== Marquee: runs constantly, speeds up and leans while the page scrolls =====
@@ -229,6 +245,15 @@ heroScroll();
   // Two identical copies: when the first one has fully left, we jump back by its width — seamless loop
   t.innerHTML = Array(2).fill(words.map(w => `<span>${w}</span>`).join('')).join('');
   if (reduceMotion) return;
+  let half = t.scrollWidth / 2; // width of one copy, re-measured on resize (not every frame)
+  addEventListener('resize', () => { half = t.scrollWidth / 2; });
+  // Touch screens: a plain CSS animation. It runs on the compositor, so it never stutters
+  // while a finger is scrolling the page. Same speed as the mouse version (~48 px/s).
+  if (!finePointer) {
+    t.style.animationDuration = Math.round(half / 48) + 's';
+    t.classList.add('mq__t--css');
+    return;
+  }
   let x = 0, speed = 1, skew = 0, visible = true;
   let lastY = scrollY, lastT = performance.now(), prev = lastT;
   addEventListener('scroll', () => {
@@ -243,8 +268,8 @@ heroScroll();
     const k = Math.min(3, (now - prev) / 16.7); // frame-rate independent
     prev = now;
     if (visible) {
-      x = (x - speed * 0.8 * k) % (t.scrollWidth / 2);
-      t.style.transform = `translateX(${x}px) skewX(${skew}deg)`;
+      x = (x - speed * 0.8 * k) % half;
+      t.style.transform = `translate3d(${x}px, 0, 0) skewX(${skew}deg)`;
     }
     speed += (1 - speed) * 0.05 * k; // calm back down to normal speed
     skew *= Math.pow(0.9, k);
@@ -506,12 +531,14 @@ $('#revNext').addEventListener('click', () => {
 });
 addEventListener('resize', () => moveRev(0));
 // Swipe on touch screens
-let tx = null;
-track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+let tx = null, ty = 0;
+track.addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, { passive: true });
 track.addEventListener('touchend', e => {
   if (tx === null) return;
   const dx = e.changedTouches[0].clientX - tx;
-  if (Math.abs(dx) > 40) moveRev(dx < 0 ? 1 : -1);
+  const dy = e.changedTouches[0].clientY - ty;
+  // Only a clearly sideways swipe turns the page: a vertical scroll that drifts sideways must not
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) moveRev(dx < 0 ? 1 : -1);
   tx = null;
 });
 
