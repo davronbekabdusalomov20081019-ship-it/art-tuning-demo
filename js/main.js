@@ -163,16 +163,18 @@ function krasNow() {
   const d = new Date();
   return new Date(d.getTime() + d.getTimezoneOffset() * 60000 + 7 * 3600000);
 }
+// Opening hours by weekday (0 = Sunday … 6 = Saturday): [open, close] in hours, null = day off.
+// Source: Yandex Maps, checked 2026-11-07 (winter schedule, no lunch break listed). To be confirmed by the atelier.
+// When the schedule changes, update this table AND the hours text in index.html (search «Пн–Пт»).
+const HOURS = [null, [9, 18], [9, 18], [9, 18], [9, 18], [9, 18], null];
 (function openStatus() {
   const now = krasNow();
-  const day = now.getDay();
+  const today = HOURS[now.getDay()];
   const h = now.getHours() + now.getMinutes() / 60;
-  const start = day === 6 ? 10 : 9;
-  const open = day !== 0 && h >= start && h < 19 && !(h >= 13 && h < 14);
-  const lunch = day !== 0 && h >= 13 && h < 14;
+  if (!today || h < today[0] || h >= today[1]) return; // closed: keep the default text from the HTML
   $$('[data-open-status]').forEach(el => {
-    if (open) { el.textContent = 'Открыто до 19:00'; el.classList.add('is-open'); }
-    else if (lunch) el.textContent = 'Перерыв до 14:00';
+    el.textContent = `Открыто до ${today[1]}:00`;
+    el.classList.add('is-open');
   });
 })();
 
